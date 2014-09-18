@@ -1,0 +1,14 @@
+Client ID
+    264838449411-fpjb3l7aa5bssbach5s3f2snjh89v20i.apps.googleusercontent.com
+Email address
+    264838449411-fpjb3l7aa5bssbach5s3f2snjh89v20i@developer.gserviceaccount.com 
+Client secret
+    OCjPxVgzvNSgJppHLzVL1hbl 
+Redirect URIs
+
+        http://localhost:8000/login/google-oauth2/
+        http://localhost:8000/complete/google-oauth2/
+
+Javascript Origins
+
+        http://localhost:8000/
