@@ -1,0 +1,52 @@
+<!DOCTYPE html> 
+<html> 
+
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script type="text/javascript"> 
+
+   $(window).bind('beforeunload', function() {
+        
+    });
+
+   $( document ).ready(function() {
+       // $(".debug").append(mkroom);
+       	var input = $("<input>")
+               			.attr("type", "hidden")
+               			.attr("name", "Psessname").val(mkroom);
+		$('#createSess').append($(input));
+    });
+
+   var mkroom = String(CryptoJS.MD5( String(Math.random()) ));
+   var username = String("{{myuname}}");
+
+   
+
+</script>
+
+<script src="//cdn.webrtc-experiment.com/socket.io.js"></script>
+</head>
+
+<body> 
+
+<p>
+<a href="/logout">Logout</a><br>
+<a href="/{{myuname|safe}}">{{myname}}</a><br>
+Welcome {{ username|safe }}
+</p>
+
+<div class="debug"></div>
+
+<form id="createSess" action="/{{myuname}}/" method="post">
+{% csrf_token %}
+<input type="hidden" name="Psessmaker" value="{{myuname}}"></input>
+<input type="submit" value="Create Session">
+</form>
+
+<script type="text/javascript"> 
+
+</script>
+</body> 
+
+</html>

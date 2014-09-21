@@ -1,0 +1,48 @@
+<!DOCTYPE html> 
+<html> 
+
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+<script type="text/javascript"> 
+  $(window).bind('beforeunload', function() {
+        //$( ".UserTrack" ).append( "{{myname}} Left" );
+    });
+
+  $( document ).ready(function() {    
+        //$( ".UserTrack" ).append( String(mkroom) );
+    });
+
+  var Pageusername = String("{{Pageusername}}");
+</script>
+
+</head>
+
+<body> 
+
+<p>
+<a href="/logout">Logout</a><br>
+<a href="/{{myuname|safe}}">{{myname}}</a><br>
+Welcome {{ username|safe }}
+</p>
+
+<script src="//cdn.webrtc-experiment.com/socket.io.js"> </script>
+{% load staticfiles %}<script type="text/javascript" src="{% static 'webrtc-stun.js' %}"></script>
+<script src="//cdn.webrtc-experiment.com/video-conferencing/conference.js"> </script>
+<script type="text/javascript" src="{% static 'conferencesetup.js' %}"></script>
+<button id="setup-new-room">Join Conference</button>
+<table style="width: 100%;" id="rooms-list"></table>
+<div id="videos-container"></div>
+
+
+<div class="UserTrack"></div>
+
+<script type="text/javascript"> 
+    $('#createSess').click(function(){
+        window.location.href = mkroom;
+   });
+</script>
+
+</body> 
+
+</html>
