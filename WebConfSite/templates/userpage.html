@@ -2,8 +2,18 @@
 <html> 
 
 <head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+  
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
 <script type="text/javascript"> 
 
    $(window).bind('beforeunload', function() {
@@ -11,17 +21,15 @@
     });
 
    $( document ).ready(function() {
-       // $(".debug").append(mkroom);
+    /*
        	var input = $("<input>")
                			.attr("type", "hidden")
                			.attr("name", "Psessname").val(mkroom);
-		$('#createSess').append($(input));
+		    $('#createSess').append($(input));
+    */
     });
 
-   var mkroom = String(CryptoJS.MD5( String(Math.random()) ));
    var username = String("{{myuname}}");
-
-   
 
 </script>
 
@@ -38,10 +46,11 @@ Welcome {{ username|safe }}
 
 <div class="debug"></div>
 
-<form id="createSess" action="/{{myuname}}/" method="post">
+<form id="createSess" action="/{{myuname}}/" method="POST">
 {% csrf_token %}
-<input type="hidden" name="Psessmaker" value="{{myuname}}"></input>
+<input type="checkbox" name="Psessprivate" value="True" />User-Invited Session only<br/>
 <input type="submit" value="Create Session">
+
 </form>
 
 <script type="text/javascript"> 

@@ -14,8 +14,13 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('django_socketio.urls')),
     url(r'^$', include('home.urls'), ),
-    url(r'^login$', views.newsession ), 
+    url(r'^login$', views.loaduser ), 
 	url(r'^logout$', views.logout ),
-    #url(r'^testsock$', login_required(TemplateView.as_view(template_name="conference.html"))), 
+	url(r'^user-search/$', views.usersearch ),
+	url(r'^leave-session/$', views.leavesession ),
+	url(r'^enter-session/$', views.entersession ),
+
     url(r'^(?P<Uusername>([a-z0-9_\.-]+))/$', views.getUser ),
+    url(r'^(?P<Uusername>([a-z0-9_\.-]+))/(?P<Usessname>([a-f0-9]{32}))/$', views.userConfSession ),
+    
 )

@@ -40,12 +40,13 @@ INSTALLED_APPS = (
 	'django_socketio',
     'social.apps.django_app.default',
 	'home',
-    'friendship'
-    #'debug_toolbar.apps.DebugToolbarConfig',
+    'friendship',
+    'corsheaders',
 )
 SITE_ID = 1
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -55,8 +56,8 @@ MIDDLEWARE_CLASSES = (
     'social.apps.django_app.middleware.SocialAuthExceptionMiddleware',
 )
 
-#SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
-
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
 #
 AUTHENTICATION_BACKENDS = (
     'social.backends.google.GoogleOAuth2',

@@ -1,97 +1,275 @@
-$(function() {
-	var config = {
-	    openSocket: function (config) {
+// Muaz Khan         - www.MuazKhan.com
+// MIT License       - www.WebRTC-Experiment.com/licence
+// Experiments       - github.com/muaz-khan/WebRTC-Experiment
 
-	        var SIGNALING_SERVER = 'https://webrtc-signaling.nodejitsu.com:443/',
-	            defaultChannel = location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
+// This library is known as multi-user connectivity wrapper!
+// It handles connectivity tasks to make sure two or more users can interconnect!
 
-	        var channel = config.channel || defaultChannel;
-	        var sender = Math.round(Math.random() * 999999999) + 999999999;
+var conference = function(config) {
+    var self = {
+        userToken: uniqueToken()
+    };
+    var channels = '--', isbroadcaster;
+    var isGetNewRoom = true;
+    var sockets = [];
+    var defaultSocket = { };
 
-	        io.connect(SIGNALING_SERVER).emit('new-channel', {
-	            channel: channel,
-	            sender: sender
-	        });
+    function openDefaultSocket() {
+        defaultSocket = config.openSocket({
+            onmessage: onDefaultSocketResponse,
+            callback: function(socket) {
+                defaultSocket = socket;
+            }
+        });
+    }
 
-	        var socket = io.connect(SIGNALING_SERVER + channel);
-	        socket.channel = channel;
-	        socket.on('connect', function () {
-	            if (config.callback) config.callback(socket);
-	        });
+    function onDefaultSocketResponse(response) {
+        if (response.userToken == self.userToken) return;
 
-	        socket.send = function (message) {
-	            socket.emit('message', {
-	                sender: sender,
-	                data: message
-	            });
-	        };
+        if (isGetNewRoom && response.roomToken && response.broadcaster) config.onRoomFound(response);
 
-	        socket.on('message', config.onmessage);
-	    },
-	    onRemoteStream: function (media) {
-	        var video = media.video;
-	        video.setAttribute('controls', true);
-	        video.setAttribute('id', media.stream.id);
-	        videosContainer.insertBefore(video, videosContainer.firstChild);
-	        video.play();
-	    },
-	    onRemoteStreamEnded: function (stream) {
-	        var video = document.getElementById(stream.id);
-	        if (video) video.parentNode.removeChild(video);
-	    },
-	    onRoomFound: function (room) {
-	        var alreadyExist = document.querySelector('button[data-broadcaster="' + room.broadcaster + '"]');
-	        if (alreadyExist) return;
+        if (response.newParticipant && self.joinedARoom && self.broadcasterid == response.userToken) onNewParticipant(response.newParticipant);
 
-	        var tr = document.createElement('tr');
-	        tr.innerHTML = '<td><strong>' + room.roomName + '</strong> shared a conferencing room with you!</td>' +
-	            '<td><button class="join">Join</button></td>';
-	        roomsList.insertBefore(tr, roomsList.firstChild);
+        if (response.userToken && response.joinUser == self.userToken && response.participant && channels.indexOf(response.userToken) == -1) {
+            channels += response.userToken + '--';
+            openSubSocket({
+                isofferer: true,
+                channel: response.channel || response.userToken
+            });
+        }
 
-	        var joinRoomButton = tr.querySelector('.join');
-	        joinRoomButton.setAttribute('data-broadcaster', room.broadcaster);
-	        joinRoomButton.setAttribute('data-roomToken', room.broadcaster);
-	        joinRoomButton.onclick = function () {
-	            this.disabled = true;
+        // to make sure room is unlisted if owner leaves		
+        if (response.left && config.onRoomClosed) {
+            config.onRoomClosed(response);
+        }
+    }
 
-	            var broadcaster = this.getAttribute('data-broadcaster');
-	            var roomToken = this.getAttribute('data-roomToken');
-	            captureUserMedia(function () {
-	                conferenceUI.joinRoom({
-	                    roomToken: roomToken,
-	                    joinUser: broadcaster
-	                });
-	            });
-	        };
-	    }
-	};
+    function openSubSocket(_config) {
+        if (!_config.channel) return;
+        var socketConfig = {
+            channel: _config.channel,
+            onmessage: socketResponse,
+            onopen: function() {
+                if (isofferer && !peer) initPeer();
+                sockets[sockets.length] = socket;
+            }
+        };
 
-	var conferenceUI = conference(config);
-	var videosContainer = document.getElementById('videos-container') || document.body;
-	var roomsList = document.getElementById('rooms-list');
+        socketConfig.callback = function(_socket) {
+            socket = _socket;
+            this.onopen();
+        };
 
-	document.getElementById('setup-new-room').onclick = function () {
-	    this.disabled = true;
-	    captureUserMedia(function () {
-	        conferenceUI.createRoom({
-	            roomName: username
-	        });
-	    });
-	};
+        var socket = config.openSocket(socketConfig),
+            isofferer = _config.isofferer,
+            gotstream,
+            video = document.createElement('video'),
+            inner = { },
+            peer;
 
-	function captureUserMedia(callback) {
-	    var video = document.createElement('video');
-	    video.setAttribute('autoplay', true);
-	    video.setAttribute('controls', true);
-	    videosContainer.insertBefore(video, videosContainer.firstChild);
+        var peerConfig = {
+            attachStream: config.attachStream,
+            onICE: function(candidate) {
+                socket.send({
+                    userToken: self.userToken,
+                    candidate: {
+                        sdpMLineIndex: candidate.sdpMLineIndex,
+                        candidate: JSON.stringify(candidate.candidate)
+                    }
+                });
+            },
+            onRemoteStream: function(stream) {
+                if (!stream) return;
 
-	    getUserMedia({
-	        video: video,
-	        onsuccess: function (stream) {
-	            config.attachStream = stream;
-	            video.setAttribute('muted', true);
-	            callback();
-	        }
-	    });
-	}
-});
+                video[moz ? 'mozSrcObject' : 'src'] = moz ? stream : webkitURL.createObjectURL(stream);
+                video.play();
+
+                _config.stream = stream;
+                onRemoteStreamStartsFlowing();
+            },
+            onRemoteStreamEnded: function(stream) {
+                if (config.onRemoteStreamEnded)
+                    config.onRemoteStreamEnded(stream, video);
+            }
+        };
+
+        function initPeer(offerSDP) {
+            if (!offerSDP) {
+                peerConfig.onOfferSDP = sendsdp;
+            } else {
+                peerConfig.offerSDP = offerSDP;
+                peerConfig.onAnswerSDP = sendsdp;
+            }
+
+            peer = RTCPeerConnection(peerConfig);
+        }
+        
+        function afterRemoteStreamStartedFlowing() {
+            gotstream = true;
+
+            if (config.onRemoteStream)
+                config.onRemoteStream({
+                    video: video,
+                    stream: _config.stream
+                });
+
+            if (isbroadcaster && channels.split('--').length > 3) {
+                /* broadcasting newly connected participant for video-conferencing! */
+                defaultSocket.send({
+                    newParticipant: socket.channel,
+                    userToken: self.userToken
+                });
+            }
+        }
+
+        function onRemoteStreamStartsFlowing() {
+            if(navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i)) {
+                // if mobile device
+                return afterRemoteStreamStartedFlowing();
+            }
+            
+            if (!(video.readyState <= HTMLMediaElement.HAVE_CURRENT_DATA || video.paused || video.currentTime <= 0)) {
+                afterRemoteStreamStartedFlowing();
+            } else setTimeout(onRemoteStreamStartsFlowing, 50);
+        }
+
+        function sendsdp(sdp) {
+            socket.send({
+                userToken: self.userToken,
+                sdp: JSON.stringify(sdp)
+            });
+        }
+
+        function socketResponse(response) {
+            if (response.userToken == self.userToken) return;
+            if (response.sdp) {
+                inner.sdp = JSON.parse(response.sdp);
+                selfInvoker();
+            }
+
+            if (response.candidate && !gotstream) {
+                if (!peer) console.error('missed an ice', response.candidate);
+                else
+                    peer.addICE({
+                        sdpMLineIndex: response.candidate.sdpMLineIndex,
+                        candidate: JSON.parse(response.candidate.candidate)
+                    });
+            }
+
+            if (response.left) {
+                if (peer && peer.peer) {
+                    peer.peer.close();
+                    peer.peer = null;
+                }
+            }
+        }
+
+        var invokedOnce = false;
+
+        function selfInvoker() {
+            if (invokedOnce) return;
+
+            invokedOnce = true;
+
+            if (isofferer) peer.addAnswerSDP(inner.sdp);
+            else initPeer(inner.sdp);
+        }
+    }
+
+    function leave() {
+        var length = sockets.length;
+        for (var i = 0; i < length; i++) {
+            var socket = sockets[i];
+            if (socket) {
+                socket.send({
+                    left: true,
+                    userToken: self.userToken
+                });
+                delete sockets[i];
+            }
+        }
+
+        // if owner leaves; try to remove his room from all other users side
+        if (isbroadcaster) {
+            defaultSocket.send({
+                left: true,
+                userToken: self.userToken,
+                roomToken: self.roomToken
+            });
+        }
+
+        if (config.attachStream) config.attachStream.stop();
+    }
+    
+    window.addEventListener('beforeunload', function () {
+        leave();
+    }, false);
+
+    window.addEventListener('keyup', function (e) {
+        if (e.keyCode == 116)
+            leave();
+    }, false);
+
+    function startBroadcasting() {
+        defaultSocket && defaultSocket.send({
+            roomToken: self.roomToken,
+            roomName: self.roomName,
+            broadcaster: self.userToken
+        });
+        setTimeout(startBroadcasting, 3000);
+    }
+
+    function onNewParticipant(channel) {
+        if (!channel || channels.indexOf(channel) != -1 || channel == self.userToken) return;
+        channels += channel + '--';
+
+        var new_channel = uniqueToken();
+        openSubSocket({
+            channel: new_channel
+        });
+
+        defaultSocket.send({
+            participant: true,
+            userToken: self.userToken,
+            joinUser: channel,
+            channel: new_channel
+        });
+    }
+
+    function uniqueToken() {
+        var s4 = function() {
+            return Math.floor(Math.random() * 0x10000).toString(16);
+        };
+        return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
+    }
+
+    openDefaultSocket();
+    return {
+        createRoom: function(_config) {
+            self.roomName = _config.roomName || 'Anonymous';
+            self.roomToken = uniqueToken();
+
+            isbroadcaster = true;
+            isGetNewRoom = false;
+            startBroadcasting();
+        },
+        joinRoom: function(_config) {
+            self.roomToken = _config.roomToken;
+            isGetNewRoom = false;
+
+            self.joinedARoom = true;
+            self.broadcasterid = _config.joinUser;
+
+            openSubSocket({
+                channel: self.userToken
+            });
+
+            defaultSocket.send({
+                participant: true,
+                userToken: self.userToken,
+                joinUser: _config.joinUser
+            });
+        },
+        leaveRoom: leave
+    };
+};

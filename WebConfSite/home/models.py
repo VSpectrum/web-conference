@@ -1,29 +1,44 @@
 from django.db import models
-
-ConnType = (
-	('P2P', 'Peer-to-Peer'),
-	('S2C', 'Server-to-Clients'),
-)
+from django.contrib.auth.models import User
 
 # Create your models here.
-class User(models.Model):
-	email			= models.CharField(max_length=80, unique=True)
-	firstname		= models.CharField(max_length=50)
-	lastname		= models.CharField(max_length=50)
-	invitedsessions	= models.ForeignKey('NewSession')
-	def __unicode__(self):
-		return self.email
+# class User(models.Model):
+# 	email			= models.CharField(max_length=80, unique=True)
+# 	firstname		= models.CharField(max_length=50)
+# 	lastname		= models.CharField(max_length=50)
+# 	invitedsessions	= models.ForeignKey('NewSession')
+# 	def __unicode__(self):
+# 		return self.email
 
 class NewSession(models.Model):
 	sessionID 		= models.AutoField(primary_key=True, unique=True)
-	sessionHost		= models.ForeignKey('User')
-	sessionType		= models.CharField(max_length=3, choices=ConnType)
+	sessionName 	= models.CharField(max_length=33)
+	sessionHost		= models.ForeignKey(User)
+	sessionPrivate	= models.BooleanField(default=False) #if locked only invited users can enter
+	sessionActive	= models.BooleanField(default=True)
 	dateTCreated	= models.DateTimeField(auto_now_add=True)
 	def __unicode__(self):
-		return self.sessionID
+		return self.sessionName
 		
-class ManagedSession(models.Model):
-	MSsessionID		= models.ForeignKey('NewSession')
-	MSinvitedusers	= models.ForeignKey('User')
+class InvitedToSession(models.Model):
+	sessionName		= models.ForeignKey(NewSession)
+	invitedUsers	= models.ForeignKey(User)
 	def __unicode__(self):
-		return self.sessionID
+		return self.sessionName.sessionName
+
+class ManagedSession(models.Model):
+	EnteredLeft = 	(
+						('Enter', 'Entered'), 
+						('Left', 'Left'),
+					)
+	sessionName 	= models.ForeignKey(NewSession)
+	sessionUser		= models.CharField(max_length=50)
+	UserActivity	= models.CharField(max_length=5, choices=EnteredLeft)
+	TimeActivity	= models.DateTimeField()
+	def __unicode__(self):
+		return self.sessionName.sessionName
+
+class QoEassessment(models.Model):
+	sessionName 	= models.ForeignKey(NewSession)
+	VideoQuality	= models.CharField(max_length=2)
+	VideoQuality	= models.CharField(max_length=2)
