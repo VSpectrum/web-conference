@@ -15,7 +15,10 @@ import hashlib, random, json, datetime
 
 ### Home Page ### / ------------------------------------------------------------------------------------------------------
 def index(request):
-	return render_to_response('home/index.html', context_instance = RequestContext(request))
+	if str(request.user) == "AnonymousUser":
+		return render_to_response('home/index.html', context_instance = RequestContext(request))
+	else:
+		return redirect('/'+str(request.user))
 
 ### Logout and Redirect to Home Page ### /logout -------------------------------------------------------------------------
 def logout(request):
@@ -41,7 +44,8 @@ def getUser(request, Uusername):
 		if str(request.user) == str(Uusername): ## if user is on his/her own page --
 			myname = User.objects.get(username=str(request.user))
 			data = {
-						'username': str(myname.get_full_name()), 
+						'pagename': str(myname.get_full_name()), 
+						'pageuname': str(Uusername), 
 						'myname': str(myname.get_full_name()),
 						'myuname': str(request.user),
 					} 
@@ -49,18 +53,15 @@ def getUser(request, Uusername):
 		else: ## if user is on another person's page --
 			try:
 				myname = User.objects.get(username=str(request.user))
+				pageusername = User.objects.get(username=str(Uusername))
 				data = {
-							'username': 'visitor!', 
+							'pagename': str(pageusername.get_full_name()), 
+							'pageuname': str(Uusername), 
 							'myname': str(myname.get_full_name()), 
 							'myuname': str(request.user),
 						} 
 			except User.DoesNotExist: ## exception if logged-in user is not in db? -- do 404 for now
-				data = {
-							'username': 'visitor!', 
-							'myname': '', 
-							'myuname': '',
-						} 
-				return Http404
+				raise Http404
 
 		return render_to_response('userpage.html', data, context_instance = RequestContext(request))
 	
@@ -79,8 +80,8 @@ def getUser(request, Uusername):
 		NewSession.objects.create(sessionName=sessname, sessionHost=host, sessionPrivate=sesstype)
 		session = NewSession.objects.get(sessionName=sessname)
 		InvitedToSession.objects.create(sessionName=session, invitedUsers=host)
-		return redirect('/'+sessmaker+'/'+sessname)
-
+		#return redirect('/'+sessmaker+'/'+sessname)
+		return HttpResponse('/'+sessmaker+'/'+sessname)
 	else:	
 		return render_to_response('userpage.html', data, context_instance = RequestContext(request))
 
@@ -100,10 +101,12 @@ def userConfSession(request, Uusername, Usessname):
 	except:
 		raise Http404
 
-	
+	pagename = User.objects.get(username=str(Uusername)).get_full_name()
+
 	if str(request.user)=="AnonymousUser":
 		data = {
-					'Pageusername': str(Uusername), 
+					'pagename': str(pagename),
+					'pageuname': str(Uusername), 
 					'myname': 'AnonymousUser', 
 					'myuname': 'AnonymousUser',
 					'sessname': str(Usessname),
@@ -112,7 +115,8 @@ def userConfSession(request, Uusername, Usessname):
 	else:
 		myname = User.objects.get(username=str(request.user))
 		data = {
-					'Pageusername': str(Uusername), 
+					'pagename': str(pagename),
+					'pageuname': str(Uusername), 
 					'myname': str(myname.get_full_name()),
 					'myuname': str(request.user),
 					'sessname': str(Usessname),
@@ -147,14 +151,34 @@ def userConfSession(request, Uusername, Usessname):
 def usersearch(request):
 	if request.method == "POST":
 		search_user = str(request.POST.get('search_user', None))
+		sessionname = str(request.POST.get('sessionName', None))
 		if search_user == '':
 			return HttpResponse('')
 		else:
 			users = User.objects.filter(username__contains=search_user)
-			return render_to_response('usersearch.html', { 'users':users }, context_instance = RequestContext(request))
+			data = 	{
+						'users': users, 
+						'sessname': str(sessionname),
+					}
+			return render_to_response('usersearch.html', data, context_instance = RequestContext(request))
+
+### POST handler to invite users -----------------------------------------------------------------------------------------
+def inviteuser(request, Uusername):
+	if request.method == "POST":
+		sessionname = str(request.POST.get('sessname', None))
+		inviteduser = str(Uusername)
+
+		sessionobj = NewSession.objects.get(sessionName=sessionname)
+		sessionowner = str(sessionobj.sessionHost)
+
+		if str(request.user) == sessionowner: ## if session owner has invited a user then add the user to conference
+			inviteduserobj = User.objects.get(username=inviteduser)
+			obj, created = InvitedToSession.objects.get_or_create(sessionName=sessionobj, invitedUsers=inviteduserobj, defaults={})
+
+		return HttpResponse('')
 
 
-### GET handler to leave session ----------------------------------------------------------------------------------------
+### GET handler to leave session -----------------------------------------------------------------------------------------
 def leavesession(request):
 	if request.method == "GET":
 		leftuser = str(request.user)
@@ -168,7 +192,7 @@ def leavesession(request):
 
 		return HttpResponse('')
 
-### GET handler to enter session ----------------------------------------------------------------------------------------
+### GET handler to enter session -----------------------------------------------------------------------------------------
 def entersession(request):
 	if request.method == "GET":
 		enteruser = str(request.user)

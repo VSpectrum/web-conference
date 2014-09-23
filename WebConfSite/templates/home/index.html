@@ -2,22 +2,56 @@
 <html> 
 
 <head>
+{% load staticfiles %}
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-
-<!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
-<!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  
+<link rel="stylesheet" href="{% static 'sidebar.css' %}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body> 
 
+<div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">Web Conference</a>
+                </li>
+                <li>
+                    <a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a>
+                </li>
+                <li>
+                    <a href="#">-</a>
+                </li>
+                <li>
+                    <a href="#">-</a>
+                </li>
+                <li>
+                    <a href="#">-</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+
+            </ul>
+        </div>
+
+        <div id="page-content-wrapper">
+           
+        </div>
+
+
+    </div>
+
+
 <p> 
-<a href="{% url 'social:begin' 'google-oauth2' %}">Login</a>
+
 </p>
 
 </body> 

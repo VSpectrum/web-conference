@@ -2,18 +2,16 @@
 <html> 
 
 <head>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-  
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{% load staticfiles %}
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="{% static 'sidebar.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="//cdn.webrtc-experiment.com/socket.io.js"></script>
 <script type="text/javascript"> 
 
    $(window).bind('beforeunload', function() {
@@ -33,27 +31,86 @@
 
 </script>
 
-<script src="//cdn.webrtc-experiment.com/socket.io.js"></script>
+
 </head>
 
 <body> 
 
-<p>
-<a href="/logout">Logout</a><br>
-<a href="/{{myuname|safe}}">{{myname}}</a><br>
-Welcome {{ username|safe }}
-</p>
-
 <div class="debug"></div>
 
-<form id="createSess" action="/{{myuname}}/" method="POST">
-{% csrf_token %}
-<input type="checkbox" name="Psessprivate" value="True" />User-Invited Session only<br/>
-<input type="submit" value="Create Session">
+<div id="wrapper">
 
-</form>
+    <!-- Sidebar -->
+    <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+            <li class="sidebar-brand">
+                <a href="/{{pageuname|safe}}">{{pagename}}</a>
+            </li>
+            <li>
+                <a href="/{{myuname|safe}}">My Home Page</a>
+            </li>
+            <li>
+                <a href="#">Friends</a>
+            </li>
+            <li id="userinvitesess">
+                <a href="#">User-Invited Only Session</a>
+            </li>
+            <li id="opensess">
+                <a href="#">Open Session</a>
+            </li>
+            <li>
+                <a href="/logout">Logout</a>
+            </li>
+
+        </ul>
+    </div>
+
+    <div id="page-content-wrapper">
+
+    </div>
+
+
+</div>
+
+
 
 <script type="text/javascript"> 
+
+    $("#userinvitesess").click( function(){
+          $.ajax({
+              type: "POST",
+              url: "/{{myuname}}/",
+              data: {
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                  Psessprivate: "True"
+              },
+              success: function(data) {
+                  window.location.href = data;
+              },
+              error: function(xhr, textStatus, errorThrown) {
+                  alert("Error occurred");
+              }
+          });
+    });
+
+
+    $("#opensess").click( function(){
+          $.ajax({
+              type: "POST",
+              url: "/{{myuname}}/",
+              data: {
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                  Psessprivate: "False"
+              },
+              success: function(data) {
+                  window.location.href = data;
+              },
+              error: function(xhr, textStatus, errorThrown) {
+                  alert("Error occurred");
+              }
+          });
+    });
+
 
 </script>
 </body> 

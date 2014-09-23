@@ -89,7 +89,7 @@ $(function() {
 	        video: video,
 	        onsuccess: function (stream) {
 	            config.attachStream = stream;
-	            video.setAttribute('muted', true);
+	            video.setAttribute('muted', true); //my created video will be muted
 	            callback();
 	        }
 	    });

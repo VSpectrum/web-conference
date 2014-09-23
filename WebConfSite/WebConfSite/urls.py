@@ -20,6 +20,7 @@ urlpatterns = patterns('',
 	url(r'^leave-session/$', views.leavesession ),
 	url(r'^enter-session/$', views.entersession ),
 
+	url(r'^(?P<Uusername>([a-z0-9_\.-]+))/invite/$', views.inviteuser ),
     url(r'^(?P<Uusername>([a-z0-9_\.-]+))/$', views.getUser ),
     url(r'^(?P<Uusername>([a-z0-9_\.-]+))/(?P<Usessname>([a-f0-9]{32}))/$', views.userConfSession ),
     

@@ -3,13 +3,14 @@
 
 <head>
 {% load staticfiles %}
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"> </script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="{% static 'sidebar.css' %}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"> </script>
 <script type="text/javascript"> 
   
 
@@ -28,8 +29,8 @@
             }
         });
     });
-
-  var Pageusername = String("{{Pageusername}}");
+  var sessionname  = '{{ sessname }}';
+  var Pageusername = String("{{pagename}}");
 </script>
 </head>
 
@@ -40,14 +41,17 @@
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
+            <ul class="sidebar-nav" id="mainbar">
                 <li class="sidebar-brand">
-                    <a href="/{{myuname|safe}}">{{myname}}</a>
+                    <a href="/{{pageuname|safe}}">{{pagename}}</a>
                 </li>
-                <li>
+                <li id="inviteuser">
                     <a href="#">Invite Users to Room</a>
                 </li>
-                <li>
+                <li id="setup-new-room">
+                    <a href="#">Initiate Conference</a>
+                </li>
+                <li id="setup-new-room-fill" style = 'display: none'>
                     <a href="#">-</a>
                 </li>
                 <li>
@@ -59,21 +63,34 @@
                 <li>
                     <a href="/logout">Logout</a>
                 </li>
-
             </ul>
+
+            <ul class="sidebar-nav" id="searchbar" style = 'display: none'>
+                <li class="sidebar-brand">
+                    <a href="#" id="backtomainbar"><< Back</a>
+                </li>
+                <li id="inviteuser">
+                    <a href="#">User Search</a>
+                </li>
+                    <input type="text" id="user-search" style = 'width: 80%; margin-left:20px'/>
+                </li>
+                <ul id="usersearchresults"></ul>
+            </ul>
+
         </div>
 
         <div id="page-content-wrapper">
             <a class="btn btn-default" id="menu-toggle">Toggle Menu</a>
-            <h3>User Search</h3>
-<input type="text" id="user-search"/>
-<button id="u-search-btn">Invite</button>
-<ul id="usersearchresults">
-</ul>
+            
+            <div id="friendsearcher" style = 'display: none'>
+              <h3>User Search</h3>
+              <input type="text" id="user-search"/>
+              <button id="u-search-btn">Invite</button>
+              
+            </div>
 
-<button id="setup-new-room">Initiate Conference</button>
-<table style="width: 100%;" id="rooms-list"></table>
-<div id="videos-container"></div>
+            <table style="width: 100%;" id="rooms-list"></table>
+            <div id="videos-container"></div>
         </div>
 
 
@@ -97,19 +114,36 @@
 
 <script type="text/javascript"> 
 
-    $("#u-search-btn").click( function(){
-    
+    $("#setup-new-room").click( function(){
+          $('#setup-new-room').toggle([400]);
+          $('#setup-new-room-fill').toggle([400]);
+    });
 
+
+    $("#u-search-btn").click( function(){
+
+    });
+
+    $("#backtomainbar").click( function(){
+          $("#mainbar").toggle();
+          $("#searchbar").toggle();
+    });
+
+    $("#inviteuser").click( function(){
+          //$("#friendsearcher").toggle([400]);
+          $("#mainbar").toggle();
+          $("#searchbar").toggle();
     });
 
     $('#user-search').keyup(function(){
      $.ajax({
             type: "POST",
-            url: "/user-search/",  // or just url: "/my-url/path/"
+            url: "/user-search/", 
             //datatype: "json",
             data: {
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 search_user: $('#user-search').val(),
+                sessionName: '{{ sessname }}'
             },
             success: function(data) {
                 $('#usersearchresults').html(data);
@@ -126,8 +160,7 @@
     });
 
 
-     window.onbeforeunload = function(){
-
+    window.onbeforeunload = function(){
       $.ajax({
           type: "GET",
           async: false,
@@ -140,7 +173,6 @@
           error: function(xhr, textStatus, errorThrown) {
           }
       });
-
     };
 
 </script>
