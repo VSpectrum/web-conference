@@ -1,0 +1,32 @@
+{% if users.count > 0 %}
+
+{% for user in users %}
+	<li><a href='#' val="{{user.username}}">{{user.username}}</a></li>
+{% endfor %}
+
+{% else %}
+
+	<li>Username does not exist</li>
+
+{% endif %}
+
+<script type="text/javascript"> 
+
+    $("#usersearchresults li").on("click", function(){
+      	selecteduser = $(this).text();
+ 		$.ajax({
+              type: "POST",
+              url: "/"+selecteduser+"/invite/",
+              data: {
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                  sessname: sessionname,
+              },
+              success: function(data) {
+              	   alert(selecteduser+" is invited to room.");
+              },
+              error: function(xhr, textStatus, errorThrown) {
+                  alert("Error occurred");
+              }
+    	});
+    });
+</script>

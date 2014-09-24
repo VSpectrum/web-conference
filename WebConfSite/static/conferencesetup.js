@@ -40,15 +40,16 @@ $(function() {
 	        if (video) video.parentNode.removeChild(video);
 	    },
 	    onRoomFound: function (room) {
-	        var alreadyExist = document.querySelector('button[data-broadcaster="' + room.broadcaster + '"]');
+	        var alreadyExist = document.querySelector('a[data-broadcaster="' + room.broadcaster + '"]');
 	        if (alreadyExist) return;
 
-	        var tr = document.createElement('tr');
-	        tr.innerHTML = '<td><strong>' + room.roomName + '</strong> shared a conferencing room with you!</td>' +
-	            '<td><button class="join">Join</button></td>';
-	        roomsList.insertBefore(tr, roomsList.firstChild);
+	        var li = document.createElement('li');
+	        li.setAttribute("id", "joinConfButton");
+	        li.setAttribute("class", "join");
+	        li.innerHTML = '<a href="#" class="join">Join Conference</a>';
+	        joinRoom.insertBefore(li, joinRoom.childNodes[4]); //insert join room li element before 4th memb
 
-	        var joinRoomButton = tr.querySelector('.join');
+	        var joinRoomButton = li.querySelector('.join');
 	        joinRoomButton.setAttribute('data-broadcaster', room.broadcaster);
 	        joinRoomButton.setAttribute('data-roomToken', room.broadcaster);
 	        joinRoomButton.onclick = function () {
@@ -69,6 +70,7 @@ $(function() {
 	var conferenceUI = conference(config);
 	var videosContainer = document.getElementById('videos-container') || document.body;
 	var roomsList = document.getElementById('rooms-list');
+	var joinRoom = document.getElementById('mainbar');
 
 	document.getElementById('setup-new-room').onclick = function () {
 	    this.disabled = true;
@@ -90,8 +92,10 @@ $(function() {
 	        onsuccess: function (stream) {
 	            config.attachStream = stream;
 	            video.setAttribute('muted', true); //my created video will be muted
+	            
 	            callback();
 	        }
 	    });
 	}
+
 });

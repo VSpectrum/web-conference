@@ -12,8 +12,6 @@
 <link rel="stylesheet" href="{% static 'sidebar.css' %}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript"> 
-  
-
 
   $( document ).ready(function() {    
          $.ajax({
@@ -29,8 +27,10 @@
             }
         });
     });
+
   var sessionname  = '{{ sessname }}';
   var Pageusername = String("{{pagename}}");
+
 </script>
 </head>
 
@@ -48,9 +48,19 @@
                 <li id="inviteuser">
                     <a href="#">Invite Users to Room</a>
                 </li>
-                <li id="setup-new-room">
-                    <a href="#">Initiate Conference</a>
-                </li>
+
+                {% if myuname == pageuname %}
+                  <li id="setup-new-room">
+                      <a href="#">Initiate Conference</a>
+                  </li>
+
+                {% else %}
+                  <li id="joinConfFill" style = 'display: none'>
+                      <a href="#">-</a>
+                  </li>
+
+                {% endif %}
+
                 <li id="setup-new-room-fill" style = 'display: none'>
                     <a href="#">-</a>
                 </li>
@@ -58,7 +68,7 @@
                     <a href="#">-</a>
                 </li>
                 <li>
-                    <a href="#">-</a>
+                    <a href="/{{myuname}}">Leave Room -> Home</a>
                 </li>
                 <li>
                     <a href="/logout">Logout</a>
@@ -81,13 +91,6 @@
 
         <div id="page-content-wrapper">
             <a class="btn btn-default" id="menu-toggle">Toggle Menu</a>
-            
-            <div id="friendsearcher" style = 'display: none'>
-              <h3>User Search</h3>
-              <input type="text" id="user-search"/>
-              <button id="u-search-btn">Invite</button>
-              
-            </div>
 
             <table style="width: 100%;" id="rooms-list"></table>
             <div id="videos-container"></div>
@@ -107,11 +110,6 @@
 <script type="text/javascript" src="{% static 'conferencesetup.js' %}"> </script>
 
 
-
-
-
-<div class="UserTrack"></div>
-
 <script type="text/javascript"> 
 
     $("#setup-new-room").click( function(){
@@ -122,6 +120,13 @@
 
     $("#u-search-btn").click( function(){
 
+    });
+
+
+    $(".join").click( function(){
+          alert('test');
+          $(".join").toggle([400]);
+          $('#joinConfFill').toggle([400]);
     });
 
     $("#backtomainbar").click( function(){

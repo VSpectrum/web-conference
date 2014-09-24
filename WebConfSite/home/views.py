@@ -162,6 +162,23 @@ def usersearch(request):
 					}
 			return render_to_response('usersearch.html', data, context_instance = RequestContext(request))
 
+
+### POST handler to get user sessions ------------------------------------------------------------------------------------
+def getuisession(request):
+	if request.method == "POST":
+		requsername = str(request.user)
+		if requsername == 'AnonymousUser':
+			return HttpResponse('')
+		else:
+			userobj = User.objects.get(username=requsername)
+			sessioninviteobj = InvitedToSession.objects.filter(invitedUsers=userobj)
+			data = 	{
+						'sessioninvites': sessioninviteobj, 
+					}
+			return render_to_response('getsessions.html', data, context_instance = RequestContext(request))
+
+
+
 ### POST handler to invite users -----------------------------------------------------------------------------------------
 def inviteuser(request, Uusername):
 	if request.method == "POST":

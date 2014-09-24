@@ -1,0 +1,1 @@
+{% if sessioninvites.count > 0 %}{% for sessioninvite in sessioninvites %}{% if sessioninvite.sessionName.sessionActive == True %}<li><a href='/{{sessioninvite.sessionName.sessionHost}}/{{sessioninvite.sessionName}}'>{{sessioninvite.sessionName.sessionHost.username}}</a></li>{% endif %}{% endfor %}{% endif %}

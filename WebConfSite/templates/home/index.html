@@ -35,7 +35,7 @@
                 <li>
                     <a href="#">-</a>
                 </li>
-                <li>
+                <li id="About">
                     <a href="#">About</a>
                 </li>
 
@@ -43,16 +43,25 @@
         </div>
 
         <div id="page-content-wrapper">
-           
+           <div id="Aboutinfo" style="display: none">
+                <h2>
+                    prototype:<br> 
+                    Chrome to Chrome web browser solution for video conferencing
+                </h2>
+           </div>
         </div>
 
 
     </div>
 
+<script type="text/javascript"> 
+    
+    $("#About").click( function(){
+          //$("#friendsearcher").toggle([400]);
+          $("#Aboutinfo").toggle();
+    });
 
-<p> 
-
-</p>
+</script>
 
 </body> 
 </html>

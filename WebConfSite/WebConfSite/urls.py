@@ -19,6 +19,7 @@ urlpatterns = patterns('',
 	url(r'^user-search/$', views.usersearch ),
 	url(r'^leave-session/$', views.leavesession ),
 	url(r'^enter-session/$', views.entersession ),
+    url(r'^getUIsessions/$', views.getuisession ),
 
 	url(r'^(?P<Uusername>([a-z0-9_\.-]+))/invite/$', views.inviteuser ),
     url(r'^(?P<Uusername>([a-z0-9_\.-]+))/$', views.getUser ),
