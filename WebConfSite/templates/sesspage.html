@@ -14,7 +14,7 @@
 <script type="text/javascript"> 
 
   $( document ).ready(function() {    
-         $.ajax({
+          $.ajax({
             type: "GET",
             async: false,
             url: "/enter-session/",  
@@ -25,13 +25,41 @@
             },
             error: function(xhr, textStatus, errorThrown) {
             }
-        });
+          });
+          
+          datamsg = {
+                sessname:'{{sessname}}',
+                uname:"{{myname}}"
+          }
+          socketchat.emit('enter', datamsg );
     });
 
   var sessionname  = '{{ sessname }}';
   var Pageusername = String("{{pagename}}");
 
 </script>
+
+
+<style>
+    #chatarea{
+      height:600px;
+      width:100%;
+    }
+    .chattable{
+      width:100%;
+      border: 1px solid #ccc;
+    }
+    .chattname{
+      width:20%;
+      border: 1px solid #ccc;
+    }
+    .chatmsg{
+      width:80%;
+      border: 1px solid #ccc;
+    }
+</style>
+
+
 </head>
 
 <body> 
@@ -89,11 +117,28 @@
 
         </div>
 
+
+        <div id="sidebar-wrapper" style="left: 100%;" >
+            <ul class="sidebar-nav" id="mainbar">
+              
+              <font color="white" size="1">
+              <div id="chatarea"  class='pre-scrollable' style="max-height: 80%;max-width:100%">
+              </font>
+              </div>
+                <!--<table style="width: 100%;" class="chattable"></table>-->
+                
+              <textarea cols="40" rows="2" id="chatinput"></textarea><input type="button" id="chatinputbutton" value="Send"></input>
+            </ul>
+        </div>
+
+
+
         <div id="page-content-wrapper">
             <a class="btn btn-default" id="menu-toggle">Toggle Menu</a>
-
+           
             <table style="width: 100%;" id="rooms-list"></table>
             <div id="videos-container"></div>
+
         </div>
 
 
@@ -103,12 +148,10 @@
 <br>
 <br>
 </p>
-
-<script src="//cdn.webrtc-experiment.com/socket.io.js"> </script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"> </script>
 <script type="text/javascript" src="{% static 'webrtc-stun.js' %}"> </script>
 <script type="text/javascript" src="{% static 'conference.js' %}"> </script>
 <script type="text/javascript" src="{% static 'conferencesetup.js' %}"> </script>
-
 
 <script type="text/javascript"> 
 
@@ -117,9 +160,32 @@
           $('#setup-new-room-fill').toggle([400]);
     });
 
+    var CHAT_SERVER = 'http://vspectrum.strangled.net:4444/';
+    var socketchat = io.connect(CHAT_SERVER);
 
-    $("#u-search-btn").click( function(){
+    $("#chatinputbutton").click( function(){
+          var datamsg = {
+            sessname:"{{sessname}}",
+            uname:"{{myname}}",
+            msg: $('#chatinput').val()
+          };
+          if(datamsg.msg!="")
+          {
+            socketchat.emit('roommsg', datamsg );
+            $("#chatarea").animate({ scrollTop: $('#chatarea')[0].scrollHeight}, 1000);
+            $("#chatinput").val("");
+          }
+    });
+    socketchat.on("chatmsg", function(data){
+        //$(".chattable").append('<tr class="chatrow"><td class="chattname">'+data.uname+'</td><td class="chatmsg">'+data.msg+"</td></tr><br/>");
+        $("#chatarea").append('<p style="color: #ffffff;">'+'<b>'+data.uname+':</b>'+'<br/>'+data.msg+'<br/></p>');
+    });
 
+    socketchat.on("userstate", function(data){
+        if(data.state=="entered")
+          $("#chatarea").append('<p style="color: #ffff00;">'+'<b>'+data.uname+':</b>'+'<br/>'+"[Entered Room]"+'<br/></p>');
+        else
+          $("#chatarea").append('<p style="color: #ffff00;">'+'<b>'+data.uname+':</b>'+'<br/>'+"[Left Room]"+'<br/></p>');
     });
 
 
@@ -135,7 +201,6 @@
     });
 
     $("#inviteuser").click( function(){
-          //$("#friendsearcher").toggle([400]);
           $("#mainbar").toggle();
           $("#searchbar").toggle();
     });
@@ -178,6 +243,13 @@
           error: function(xhr, textStatus, errorThrown) {
           }
       });
+
+      datamsg = {
+                sessname:'{{sessname}}',
+                uname:"{{myname}}"
+      }
+      socketchat.emit('leave', datamsg );
+
     };
 
 </script>

@@ -16,9 +16,9 @@ function RTCPeerConnection(options) {
     var iceServers = [];
 
     if (moz) {
-        iceServers.push({
-            url: 'stun:23.21.150.121'
-        });
+/*        iceServers.push({
+            //url: 'stun:23.21.150.121'
+        });*/
 
         iceServers.push({
             url: 'stun:stun.services.mozilla.com'
@@ -43,11 +43,11 @@ function RTCPeerConnection(options) {
     }
 
     if (!moz && chromeVersion >= 28) {
-        iceServers.push({
+/*        iceServers.push({
             url: 'turn:turn.bistri.com:80',
             credential: 'homeo',
             username: 'homeo'
-        });
+        });*/
 
         iceServers.push({
             url: 'turn:turn.anyfirewall.com:443?transport=tcp',

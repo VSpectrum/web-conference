@@ -18,12 +18,7 @@
     });
 
    $( document ).ready(function() {
-    /*
-       	var input = $("<input>")
-               			.attr("type", "hidden")
-               			.attr("name", "Psessname").val(mkroom);
-		    $('#createSess').append($(input));
-    */
+
 
           var interval = 8000;  // 5000 = 5 seconds
           function doAjax() {
@@ -72,10 +67,10 @@
                 <a href="#">Friends</a>
             </li>
             <li id="userinvitesess">
-                <a href="#">User-Invited Only Session</a>
+                <a href="#">Create User-Invited-Only Session</a>
             </li>
             <li id="opensess">
-                <a href="#">Open Session</a>
+                <a href="#">Create Open Session</a>
             </li>
             <li>
                 <a href="/logout">Logout</a>
@@ -91,7 +86,7 @@
       
       <div style="padding-left:20px">
           <h4> Active Sessions Invited to: </h4>
-          <pre style="width:20%">
+          <pre style="width:250px; height:20%;" class='pre-scrollable'>
             <ul id="sessioninvitelist"></ul>
           </pre>
       </div>

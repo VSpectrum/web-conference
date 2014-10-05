@@ -76,7 +76,7 @@ $(function() {
 	    this.disabled = true;
 	    captureUserMedia(function () {
 	        conferenceUI.createRoom({
-	            roomName: Pageusername
+	            roomName: sessionname
 	        });
 	    });
 	};
@@ -91,7 +91,7 @@ $(function() {
 	        video: video,
 	        onsuccess: function (stream) {
 	            config.attachStream = stream;
-	            video.setAttribute('muted', true); //my created video will be muted
+	            video.setAttribute('muted', true); //my own created video will be muted
 	            
 	            callback();
 	        }

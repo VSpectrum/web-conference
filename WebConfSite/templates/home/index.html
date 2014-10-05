@@ -43,18 +43,25 @@
         </div>
 
         <div id="page-content-wrapper">
-           <div id="Aboutinfo" style="display: none">
+            <a class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+            <div id="Aboutinfo" style="display: none">
                 <h2>
                     prototype:<br> 
-                    Chrome to Chrome web browser solution for video conferencing
+                    Chrome to Chrome web browser solution for video conferencing.<br>
+                    Best attempt to avoid the need to download plugins!<br>
                 </h2>
-           </div>
+            </div>
         </div>
 
 
     </div>
 
 <script type="text/javascript"> 
+    
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
     
     $("#About").click( function(){
           //$("#friendsearcher").toggle([400]);
