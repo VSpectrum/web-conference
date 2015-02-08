@@ -7,11 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 
 from django.contrib.auth.models import User
-from friendship.models import Friend, Follow
-from home.models import NewSession, InvitedToSession, ManagedSession
+from home.models import *
 
+from collections import Counter, defaultdict, OrderedDict
 import hashlib, random, json, datetime
-#########################################################################
+######################################################################################################
 
 ### Home Page ### / ------------------------------------------------------------------------------------------------------
 def index(request):
@@ -85,11 +85,6 @@ def getUser(request, Uusername):
 	else:	
 		return render_to_response('userpage.html', data, context_instance = RequestContext(request))
 
-
-	## Create profile system for user
-	## Create messaging system for footer of this page?
-
-	
 
 ### Allow unauthenticated to use this session URL if permitted? ----------------------------------------------------------
 ### User-created temporary session where other users can be invited and interact ### /{{username}}/{{sessionname}}
@@ -201,7 +196,7 @@ def leavesession(request):
 		leftuser = str(request.user)
 		sessname = str(request.GET.get('sessionname', None))
 		session = NewSession.objects.get(sessionName=sessname)
-		ManagedSession.objects.create(sessionName=session, sessionUser=leftuser, UserActivity="Left", TimeActivity=datetime.datetime.now())
+		ManagedSession.objects.create(sessionName=session, sessionUser=leftuser, UserActivity="Left", Timestamp=datetime.datetime.now())
 
 		session = NewSession.objects.get(sessionName=sessname)
 		if str(session.sessionHost.username) == leftuser:
@@ -215,6 +210,81 @@ def entersession(request):
 		enteruser = str(request.user)
 		sessname = str(request.GET.get('sessionname', None))
 		session = NewSession.objects.get(sessionName=sessname)
-		ManagedSession.objects.create(sessionName=session, sessionUser=enteruser, UserActivity="Enter", TimeActivity=datetime.datetime.now())
+		ManagedSession.objects.create(sessionName=session, sessionUser=enteruser, UserActivity="Enter", Timestamp=datetime.datetime.now())
 
 		return HttpResponse('')
+
+### POST handler for inputting Data rates ----------------------------------------------------------------------
+def storesessdata(request):
+	if request.method == "POST":
+		User = str(request.user)
+		sessionname = str(request.POST.get('sessionname', ''))
+		PVideoSentDR = float(request.POST.get('VideoSentDR', 0))
+		PVideoRecvDR = float(request.POST.get('VideoRecvDR', 0))
+		PAudioSentDR = float(request.POST.get('AudioSentDR', 0))
+		PAudioRecvDR = float(request.POST.get('AudioRecvDR', 0))
+
+		SessObj = NewSession.objects.get(sessionName=sessionname)
+		QoEassessment.objects.create(sessionName=SessObj, sessionUser=User, VideoSentDR=PVideoSentDR, VideoRecvDR=PVideoRecvDR, AudioSentDR=PAudioSentDR, AudioRecvDR=PAudioRecvDR, Timestamp=datetime.datetime.now())
+		return HttpResponse('')
+
+### AnonymousUser Page -----------------------------------------------------------------------------------------
+def anonredir(request):
+	return redirect("/")
+
+### POST handler for Bad QoE -----------------------------------------------------------------------------------------
+def ratinghandler(request):
+	if request.method == "POST":
+		User = str(request.POST.get('username', ''))
+		sessionname = str(request.POST.get('sessionname', ''))
+		badtype = str(request.POST.get('badtype', 0))
+
+		SessObj = NewSession.objects.get(sessionName=sessionname)
+		BadAssessment.objects.create(sessionName=SessObj, sessionUser=User, RatingType=badtype, Timestamp=datetime.datetime.now())
+		return HttpResponse('')
+
+### Calculating PESQ and other Quality metrics --------------------------------------------------------------------------
+def qoecalculation(request):
+	if request.method == "GET":
+		sessionname = str(request.GET.get('sessionname', ''))
+		SessObj = NewSession.objects.get(sessionName=sessionname)
+
+		AudioSessionAssess = BadAssessment.objects.filter(sessionName=SessObj, RatingType='A')
+		
+		userList = AudioSessionAssess.values_list('sessionUser').distinct()
+
+		userOneClickDict = defaultdict(list)
+		userClickDataRate = defaultdict(list)
+
+
+		OneClick_ClickDataRateMAP = dict()
+		OneClick_ClickDataRateMAP[0] = 45 #kbps
+		OneClick_ClickDataRateMAP[1] = 30 #kbps
+		OneClick_ClickDataRateMAP[2] = 22 #kbps
+		OneClick_ClickDataRateMAP[3] = 13 #kbps
+		OneClick_ClickDataRateMAP[4] = 5 #kbps
+		OneClick_ClickDataRateMAP[5] = 0 #kbps
+
+		for user in userList:
+			uniquetimelist = []
+			usertimefilt = AudioSessionAssess.objects.filter(sessionUser=user[0]) #user is a tuple
+			usertimelist = usertimefilt.values_list('Timestamp')
+			for itemtime in usertimelist:
+				uniquetimelist.append( itemtime[0].replace(microsecond=0) )
+
+			timelistcounter = Counter(uniquetimelist)
+			timelistdatarate = []
+			for key,item in timelistcounter.items():
+				timelistdatarate.append( (key, OneClick_ClickDataRateMAP[item]) )
+
+			userOneClickDict[user[0]] = timelistcounter.items()
+			userClickDataRate[user[0]] = timelistdatarate.items()
+
+
+		data = 	{
+					'userOneClick': userOneClickDict, 
+					'userClickDataRate': userClickDataRate,
+
+				}
+
+		return render_to_response('QoEsessAssess.html', data, context_instance = RequestContext(request))

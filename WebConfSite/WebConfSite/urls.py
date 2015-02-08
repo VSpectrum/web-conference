@@ -16,13 +16,20 @@ urlpatterns = patterns('',
     url(r'^$', include('home.urls'), ),
     url(r'^login$', views.loaduser ), 
 	url(r'^logout$', views.logout ),
-	url(r'^user-search/$', views.usersearch ),
+	
+    url(r'^user-search/$', views.usersearch ),
 	url(r'^leave-session/$', views.leavesession ),
 	url(r'^enter-session/$', views.entersession ),
-    url(r'^getUIsessions/$', views.getuisession ),
+    url(r'^getUIsessions/$', views.getuisession ), #userinvited sessions
+
+    url(r'^storeSessData/$', views.storesessdata ),
+    url(r'^ratingHandler/$', views.ratinghandler ),
+    url(r'^QoEsessionAssess/$', views.qoecalculation ),
+
+
+    url(r'^AnonymousUser$', views.anonredir ),
 
 	url(r'^(?P<Uusername>([a-z0-9_\.-]+))/invite/$', views.inviteuser ),
     url(r'^(?P<Uusername>([a-z0-9_\.-]+))/$', views.getUser ),
     url(r'^(?P<Uusername>([a-z0-9_\.-]+))/(?P<Usessname>([a-f0-9]{32}))/$', views.userConfSession ),
-    
 )

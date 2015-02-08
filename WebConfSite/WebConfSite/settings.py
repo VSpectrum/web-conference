@@ -72,10 +72,9 @@ SOCIAL_AUTH_LOGIN_URL = '/'
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 SOCIAL_AUTH_PROCESS_EXCEPTIONS = 'social_auth.utils.log_exceptions_to_messages'  # ...assuming you like the messages framework
  
-#GOOGLE_WHITE_LISTED_DOMAINS = ['localhost', 'gmail.com', 'vs.com']  # this is what actually limits access
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '264838449411-k238p8u4anqosdjk7q4n9mil3j583bta.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'FvKz42HxQk0wB210mZ8JZG9E'
-SOCIAL_AUTH_GOOGLE_WHITELISTED_DOMAINS = ['localhost', 'gmail.com', 'vs.com', 'vspectrum.mooo.com']
+SOCIAL_AUTH_GOOGLE_WHITELISTED_DOMAINS = ['localhost', 'gmail.com', 'veydh.com', 'home.veydh.com']
 
 SOCIAL_AUTH_COMPLETE_URL_NAME  = 'socialauth_complete'
 SOCIAL_AUTH_ASSOCIATE_URL_NAME = 'socialauth_associate_complete'
@@ -137,8 +136,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
   os.path.join(BASE_DIR, 'static/'),

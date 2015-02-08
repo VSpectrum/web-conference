@@ -15,23 +15,12 @@ function RTCPeerConnection(options) {
 
     var iceServers = [];
 
-    if (moz) {
-/*        iceServers.push({
-            //url: 'stun:23.21.150.121'
-        });*/
 
+    if (!moz && chromeVersion >= 28) {
         iceServers.push({
-            url: 'stun:stun.services.mozilla.com'
-        });
-    }
-
-    if (!moz) {
-        iceServers.push({
-            url: 'stun:stun.l.google.com:19302'
-        });
-
-        iceServers.push({
-            url: 'stun:stun.anyfirewall.com:3478'
+            url: 'turn:turn.anyfirewall.com:443?transport=tcp',
+            credential: 'webrtc',
+            username: 'webrtc'
         });
     }
 
@@ -42,19 +31,25 @@ function RTCPeerConnection(options) {
         });
     }
 
-    if (!moz && chromeVersion >= 28) {
-/*        iceServers.push({
-            url: 'turn:turn.bistri.com:80',
-            credential: 'homeo',
-            username: 'homeo'
-        });*/
-
+    if (moz) {
+        console.log("V: Detected Mozilla");
         iceServers.push({
-            url: 'turn:turn.anyfirewall.com:443?transport=tcp',
-            credential: 'webrtc',
-            username: 'webrtc'
+            url: 'stun:stun.services.mozilla.com'
         });
     }
+
+    if (!moz) {
+        console.log("V: Detected not Mozilla");
+        iceServers.push({
+            url: 'stun:stun.l.google.com:19302'
+        });
+
+        iceServers.push({
+            url: 'stun:stun.anyfirewall.com:3478'
+        });
+    }
+
+    
 
     if (options.iceServers) iceServers = options.iceServers;
 
@@ -105,6 +100,10 @@ function RTCPeerConnection(options) {
 
     peer.onaddstream = function(event) {
         var remoteMediaStream = event.stream;
+
+        ///////////////////////////////////////////
+        getStats(peer);
+        ////////////////////////////////////////////
 
         // onRemoteStreamEnded(MediaStream)
         remoteMediaStream.onended = function() {
@@ -275,6 +274,144 @@ function RTCPeerConnection(options) {
         console.error('onSdpError:', message);
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////;
+    var VideoSendDataRate = 0; 
+    var VideoReceivedDataRate = 0; 
+    var AudioSendDataRate = 0; 
+    var AudioReceivedDataRate = 0; 
+
+
+    var bytessent1=0;
+    var bytessent2=0; // need to add one for each property measured
+
+    var vbytesrecv1=0;
+    var vbytesrecv2=0;
+
+    var audiosent1=0
+    var audiosent2=0
+
+    var audiorecv1=0
+    var audiorecv2=0
+
+
+    var timerep = 2000; //2000ms
+    var timerepsec = timerep/1000; //2s
+    var krate;
+
+    function getStats(peer) {
+        myGetStats(peer, function (results) {
+            for (var i = 0; i < results.length; ++i) {
+                var res = results[i];
+                console.dir(res);
+                
+                if (!!navigator.mozGetUserMedia == false)
+                {
+                    if(res.bytesSent && res.googCodecName=="VP8") {
+                        console.log('Bytes sent (video): ' + String(res.bytesSent));
+                        bytessent1 = parseInt(res.bytesSent) - parseInt(bytessent2);
+                        krate = (bytessent1/timerepsec)/1000; //get kB
+                        VideoSentBytes = res.bytesSent; //to be used for graph on page
+                        VideoDataRate = krate;
+                        $("#sentvideobitrate").html(String(res.bytesSent)+"Video Bytes Sent"+"<br/>"+String(krate)+"kBps");
+                        bytessent2 = parseInt(res.bytesSent);
+                        VideoSendDataRate = VideoDataRate;
+                    }
+                    
+                    else if(res.bytesSent && res.googCodecName=="opus") {
+                        console.log('Bytes sent (audio): ' + String(res.bytesSent));
+                        audiosent1 = parseInt(res.bytesSent) - parseInt(audiosent2);
+                        krate = (audiosent1/timerepsec)/1000;
+                        AudioSentBytes = res.bytesSent;
+                        AudioSentDataRate = krate;
+                        $("#sentaudiobitrate").html(String(res.bytesSent)+"Audio Bytes Sent"+"<br/>"+String(krate)+"kBps");
+                        audiosent2 = parseInt(res.bytesSent);
+                        AudioSendDataRate = AudioSentDataRate;
+                    }
+                    
+                    else if(res.bytesReceived && res.googCodecName=="opus") {
+                        console.log('Bytes recv (audio): ' + String(res.bytesReceived));
+                        audiorecv1 = parseInt(res.bytesReceived) - parseInt(audiorecv2);
+                        krate = (audiorecv1/timerepsec)/1000;
+                        AudioSentBytes = res.bytesReceived;
+                        AudioSentDataRate = krate;
+                        $("#receivedaudiobitrate").html(String(res.bytesReceived)+"Audio Bytes Received"+"<br/>"+String(krate)+"kBps");
+                        audiorecv2 = parseInt(res.bytesReceived);
+                        AudioReceivedDataRate = AudioSentDataRate;
+                    }
+                    
+                    else if(res.bytesReceived && res.googFrameRateReceived>0) {
+                        console.log('Bytes recv (video): ' + String(res.bytesReceived));
+                        vbytesrecv1 = parseInt(res.bytesReceived) - parseInt(vbytesrecv2);
+                        krate = (vbytesrecv1/timerepsec)/1000;
+                        VideoSentBytes = res.bytesReceived;
+                        VideoDataRate = krate;
+                        $("#receivedvideobitrate").html(String(res.bytesReceived)+"Video Bytes Received"+"<br/>"+String(krate)+"kBps");
+                        vbytesrecv2 = parseInt(res.bytesReceived);
+                        VideoReceivedDataRate = VideoDataRate;
+                    }
+                    
+                }
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/storeSessData/",
+                data: {
+                    csrfmiddlewaretoken: token,
+                    sessionname : sessionname,
+                    VideoSentDR: VideoSendDataRate,
+                    AudioSentDR: AudioSendDataRate,
+                    VideoRecvDR: VideoReceivedDataRate,
+                    AudioRecvDR: AudioReceivedDataRate,
+                },
+                success: function(data) {
+                    //alert(data);
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    //alert("Error Occurred");
+                }
+            });
+
+            setTimeout(function () {
+                getStats(peer);
+            }, timerep);
+        });
+    }
+
+    function myGetStats(peer, callback) {
+        if (!!navigator.mozGetUserMedia) {
+            peer.getStats(
+                //null,
+                function (res) {
+                    var items = [];
+                    res.forEach(function (result) {
+                        items.push(result);
+                    });
+                    callback(items);
+                },
+                callback
+            );
+        } 
+        else {
+            peer.getStats(function (res) {
+                var items = [];
+                res.result().forEach(function (result) {
+                    var item = {};
+                    result.names().forEach(function (name) {
+                        item[name] = result.stat(name);
+                    });
+                    item.id = result.id;
+                    item.type = result.type;
+                    item.timestamp = result.timestamp;
+                    items.push(item);
+                });
+                callback(items);
+            });
+        }
+    };
+////////////////////////////////////////////////////////////////////////////////////
+
     return {
         addAnswerSDP: function(sdp) {
             console.debug('adding answer-sdp', sdp.sdp);
@@ -293,16 +430,24 @@ function RTCPeerConnection(options) {
         channel: channel,
         sendData: function(message) {
             channel && channel.send(message);
-        }
+        },
     };
 }
 
+
+
 // getUserMedia
 var video_constraints = {
-    mandatory: { },
+    mandatory: { 
+        //minFrameRate: 30
+        //maxWidth: 500,
+        //maxHeight: 360,
+    },
     optional: []
 };
 
+//user's own video
+//remote video options in conferencesetup.js (onRemoteStream)
 function getUserMedia(options) {
     var n = navigator,
         media;
@@ -318,6 +463,7 @@ function getUserMedia(options) {
         var video = options.video;
         if (video) {
             video[moz ? 'mozSrcObject' : 'src'] = moz ? stream : window.webkitURL.createObjectURL(stream);
+            video.width=400;
             video.play();
         }
         options.onsuccess && options.onsuccess(stream);

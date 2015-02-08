@@ -1,6 +1,7 @@
 <!DOCTYPE html> 
 <html> 
 
+{% if myname != '' %}
 <head>
 {% load staticfiles %}
 
@@ -11,8 +12,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="{% static 'sidebar.css' %}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script type="text/javascript"> 
 
+<script type="text/javascript"> 
   $( document ).ready(function() {    
           $.ajax({
             type: "GET",
@@ -36,7 +37,12 @@
 
   var sessionname  = '{{ sessname }}';
   var Pageusername = String("{{pagename}}");
-
+  var token = '{{csrf_token}}';
+  
+  var videorecordRTC = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]; // record RTC ref
+  var audiorecordRTC = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  var recID = 1;
+  var streamme;
 </script>
 
 
@@ -64,7 +70,6 @@
 
 <body> 
 
-
     <div id="wrapper">
 
         <!-- Sidebar -->
@@ -78,15 +83,14 @@
                 </li>
 
                 {% if myuname == pageuname %}
-                  <li id="setup-new-room">
-                      <a href="#">Initiate Conference</a>
-                  </li>
+                <li id="setup-new-room">
+                    <a href="#">Initiate Conference</a>
+                </li>
 
                 {% else %}
                   <li id="joinConfFill" style = 'display: none'>
                       <a href="#">-</a>
                   </li>
-
                 {% endif %}
 
                 <li id="setup-new-room-fill" style = 'display: none'>
@@ -95,17 +99,31 @@
                 <li>
                     <a href="#">-</a>
                 </li>
+                <li id="confMetrics">
+                    <a href="#">View Conference Metrics</a>
+                </li>
                 <li>
-                    <a href="/{{myuname}}">Leave Room -> Home</a>
+                    <a href="/{{myuname}}">Leave Room → Home</a>
                 </li>
                 <li>
                     <a href="/logout">Logout</a>
                 </li>
+
+                {% if "{{myname}}" == "AnonymousUser" %}
+                {% endif %}
+                <font color="white" size="1">
+                <div id="chatarea"  class='pre-scrollable' style="max-height: 200px;max-width:100%;padding-left: 10px;padding-top: 20px;"></font>
+                </div>
+
+                <div style="padding-left: 10px;">
+                  <textarea cols="30" rows="2" id="chatinput"></textarea>
+                  <input type="button" id="chatinputbutton" value="Send"></input>
+                </div>
             </ul>
 
             <ul class="sidebar-nav" id="searchbar" style = 'display: none'>
                 <li class="sidebar-brand">
-                    <a href="#" id="backtomainbar"><< Back</a>
+                    <a href="#" id="backtomainbar"> ← Back</a>
                 </li>
                 <li id="inviteuser">
                     <a href="#">User Search</a>
@@ -114,33 +132,43 @@
                 </li>
                 <ul id="usersearchresults"></ul>
             </ul>
-
+          
         </div>
 
+        <div id="page-content-wrapper" style="width: 100%;">
 
-        <div id="sidebar-wrapper" style="left: 100%;" >
-            <ul class="sidebar-nav" id="mainbar">
-              
-              <font color="white" size="1">
-              <div id="chatarea"  class='pre-scrollable' style="max-height: 80%;max-width:100%">
-              </font>
-              </div>
-                <!--<table style="width: 100%;" class="chattable"></table>-->
-                
-              <textarea cols="40" rows="2" id="chatinput"></textarea><input type="button" id="chatinputbutton" value="Send"></input>
-            </ul>
-        </div>
+            <nav class="navbar navbar-default">
+              <div class="container-fluid">
 
-
-
-        <div id="page-content-wrapper">
-            <a class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <ul class="nav navbar-nav">
+                    <li><a href="#" id="menu-toggle">Toggle Menu</a></li>
+                  </ul>
+                  <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" id="badaudio">Bad Audio</a></li>
+                    <li><a href="#" id="badvideo">Bad Video</a></li>
+                  </ul>
+                </div><!-- /.navbar-collapse -->
+              </div><!-- /.container-fluid -->
+            </nav>
            
-            <table style="width: 100%;" id="rooms-list"></table>
-            <div id="videos-container"></div>
-
+            <table style="width: 80%;" id="rooms-list"></table>
+            <div id="videos-container">
+              <div id="sentvideobitrate"></div>
+              <div id="receivedvideobitrate"></div>
+              <div id="sentaudiobitrate"></div>
+              <div id="receivedaudiobitrate"></div>
+            </div>
+            
         </div>
 
+        <section id="statistics">
+          <div id="senderStats"></div>
+          <div id="receiverStats"></div>
+        </section>
+
+        <section id="recordLinks"></section>
 
     </div>
 
@@ -150,8 +178,10 @@
 </p>
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"> </script>
 <script type="text/javascript" src="{% static 'webrtc-stun.js' %}"> </script>
+<script type="text/javascript" src="{% static 'RecordRTC.js' %}"> </script>
 <script type="text/javascript" src="{% static 'conference.js' %}"> </script>
 <script type="text/javascript" src="{% static 'conferencesetup.js' %}"> </script>
+
 
 <script type="text/javascript"> 
 
@@ -159,15 +189,22 @@
           $('#setup-new-room').toggle([400]);
           $('#setup-new-room-fill').toggle([400]);
     });
+//-------------------------------------------------------------------------------------------------------------
 
-    var CHAT_SERVER = 'http://vspectrum.strangled.net:4444/';
+    $("#chatinput").keyup(function (e) {
+      if (e.keyCode == 13) {
+         $("#chatinputbutton").click();
+      }
+    });
+
+    var CHAT_SERVER = 'http://veydh.com:8887/';
     var socketchat = io.connect(CHAT_SERVER);
 
     $("#chatinputbutton").click( function(){
           var datamsg = {
             sessname:"{{sessname}}",
             uname:"{{myname}}",
-            msg: $('#chatinput').val()
+            msg: $('#chatinput').val(),
           };
           if(datamsg.msg!="")
           {
@@ -176,9 +213,10 @@
             $("#chatinput").val("");
           }
     });
+
     socketchat.on("chatmsg", function(data){
-        //$(".chattable").append('<tr class="chatrow"><td class="chattname">'+data.uname+'</td><td class="chatmsg">'+data.msg+"</td></tr><br/>");
         $("#chatarea").append('<p style="color: #ffffff;">'+'<b>'+data.uname+':</b>'+'<br/>'+data.msg+'<br/></p>');
+        $("#chatarea").animate({ scrollTop: $('#chatarea')[0].scrollHeight}, 1000);
     });
 
     socketchat.on("userstate", function(data){
@@ -186,9 +224,25 @@
           $("#chatarea").append('<p style="color: #ffff00;">'+'<b>'+data.uname+':</b>'+'<br/>'+"[Entered Room]"+'<br/></p>');
         else
           $("#chatarea").append('<p style="color: #ffff00;">'+'<b>'+data.uname+':</b>'+'<br/>'+"[Left Room]"+'<br/></p>');
+        $("#chatarea").animate({ scrollTop: $('#chatarea')[0].scrollHeight}, 1000);
+    });
+//-------------------------------------------------------------------------------------------------------------
+
+    $("#videos-container").on('click', '.RecButton' ,function(){  
+        var val = this.value;  
+        videorecordRTC[this.value].stopRecording(function(videoURL) {
+          console.log(videoURL);
+          $('#recordLinks').append('<a href="'+videoURL+'" target="_blank">'+'Video Stream '+val+'</a><br/>');
+          videorecordRTC[this.value].getDataURL(function(dataURL) { });
+        });
+        audiorecordRTC[this.value].stopRecording(function(videoURL) {
+          console.log(videoURL);
+          $('#recordLinks').append('<a href="'+videoURL+'" target="_blank">'+'Audio Stream '+val+'</a><br/>');
+          audiorecordRTC[this.value].getDataURL(function(dataURL) { });
+        });
     });
 
-
+//-------------------------------------------------------------------------------------------------------------
     $(".join").click( function(){
           alert('test');
           $(".join").toggle([400]);
@@ -229,8 +283,51 @@
         $("#wrapper").toggleClass("toggled");
     });
 
+    $("#joinConfButton").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+
+    $("#badaudio").click(function(e) {
+        $.ajax({
+          type: "POST",
+          url: "/ratingHandler/",  
+          data: {
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              sessionname: '{{sessname}}',
+              username: '{{myname}}',
+              badtype: 'A'
+          },
+          success: function(data) {
+          },
+          error: function(xhr, textStatus, errorThrown) {
+          }
+      });
+    });
+
+    $("#badvideo").click(function(e) {
+        $.ajax({
+          type: "POST",
+          url: "/ratingHandler/",  
+          data: {
+              csrfmiddlewaretoken: '{{ csrf_token }}',
+              sessionname: '{{sessname}}',
+              username: '{{myname}}',
+              badtype: 'V'
+          },
+          success: function(data) {
+          },
+          error: function(xhr, textStatus, errorThrown) {
+          }
+      });
+    });
+
+    $("#confMetrics").click(function(e) {
+        window.open("/QoEsessionAssess?sessionname={{sessname}}");
+    });
 
     window.onbeforeunload = function(){
+
       $.ajax({
           type: "GET",
           async: false,
@@ -249,11 +346,10 @@
                 uname:"{{myname}}"
       }
       socketchat.emit('leave', datamsg );
-
     };
 
 </script>
 
 </body> 
-
+{% endif %}
 </html>

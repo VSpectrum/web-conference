@@ -2,7 +2,7 @@ $(function() {
 	var config = {
 	    openSocket: function (config) {
 
-	        var SIGNALING_SERVER = 'http://vspectrum.strangled.net:8888/',
+	        var SIGNALING_SERVER = 'http://veydh.com:8888/',
 	            defaultChannel = location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
 
 	        var channel = config.channel || defaultChannel;
@@ -30,10 +30,31 @@ $(function() {
 	    },
 	    onRemoteStream: function (media) {
 	        var video = media.video;
+	        video.width=400;
 	        video.setAttribute('controls', true);
 	        video.setAttribute('id', media.stream.id);
 	        videosContainer.insertBefore(video, videosContainer.firstChild);
 	        video.play();
+
+	        var video_options = {
+		           type: 'video'
+		        };
+		    videorecordRTC[recID] = RecordRTC(media.stream, video_options);
+			videorecordRTC[recID].startRecording();
+
+			var audio_options = {
+		           type: 'audio'
+		        };
+		    audiorecordRTC[recID] = RecordRTC(media.stream, audio_options);
+			audiorecordRTC[recID].startRecording();
+
+	        var recbtn = document.createElement("button"); 
+	        recbtn.setAttribute('type', 'button');
+	        recbtn.setAttribute('class', 'RecButton');
+	        recbtn.setAttribute('value', recID);
+	        recbtn.innerHTML = 'Stop Recording';
+	        videosContainer.insertBefore(recbtn, videosContainer.firstChild);
+	        recID=recID+1;
 	    },
 	    onRemoteStreamEnded: function (stream) {
 	        var video = document.getElementById(stream.id);
@@ -54,7 +75,7 @@ $(function() {
 	        joinRoomButton.setAttribute('data-roomToken', room.broadcaster);
 	        joinRoomButton.onclick = function () {
 	            this.disabled = true;
-
+	            $("#joinConfButton").toggle();
 	            var broadcaster = this.getAttribute('data-broadcaster');
 	            var roomToken = this.getAttribute('data-roomToken');
 	            captureUserMedia(function () {
@@ -93,6 +114,28 @@ $(function() {
 	            config.attachStream = stream;
 	            video.setAttribute('muted', true); //my own created video will be muted
 	            
+	            streamme = stream;
+//------------------------------------------------------------------------------------------------------------
+				var video_options = {
+		           type: 'video'
+		        };
+		        videorecordRTC[0] = RecordRTC(streamme, video_options);
+		        videorecordRTC[0].startRecording();
+
+		        var audio_options = {
+		           type: 'audio'
+		        };
+
+		        audiorecordRTC[0] = RecordRTC(streamme, audio_options);
+		        audiorecordRTC[0].startRecording();
+
+		        var recbtn = document.createElement("button"); 
+		        recbtn.setAttribute('type', 'button');
+		        recbtn.setAttribute('class', 'RecButton');
+		        recbtn.setAttribute('value', 0);
+		        recbtn.innerHTML = 'Stop Recording';
+		        videosContainer.insertBefore(recbtn, videosContainer.firstChild);
+//------------------------------------------------------------------------------------------------------------
 	            callback();
 	        }
 	    });
