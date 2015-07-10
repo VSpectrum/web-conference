@@ -1,0 +1,71 @@
+<style type="text/css">
+	div.container{
+	height: 610px;
+	margin:20px auto;
+	font-family: 'Droid Serif', serif;
+	position:relative;
+	}
+	div.main{
+	width: 320px;
+	float:left;
+	padding: 10px 55px 40px;
+	border: 15px solid white;
+	box-shadow: 0 0 10px;
+	border-radius: 2px;
+	font-size: 13px;
+	}
+	input[type=text],[type=password] {
+	width: 97.7%;
+	height: 34px;
+	padding-left: 5px;
+	margin-bottom: 20px;
+	margin-top: 8px;
+	color: #4f4f4f;
+	font-size: 16px;
+	}
+	label{
+	color: #464646;
+	text-shadow: 0 1px 0 #fff;
+	font-size: 14px;
+	font-weight: bold;
+	}
+</style>
+
+<div class="container">
+	<div class="main">
+		<form class="form" method="post" action="#">
+			<h2>Login</h2>
+			<label>Username :</label>
+			<input type="text" name="username" id="username">
+			<label>Password :</label>
+			<input type="password" name="password" id="password">
+			<input type="button" class="button" id="loginbtn" value="Login" style="width: 100%">
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$("#loginbtn").click(function() {
+		var username = $("#username").val();
+		var password = $("#password").val();
+		if (username == '' || password == '') {
+			alert("No field is to be left blank.");
+		} 
+		else {
+			$.ajax({
+	          type: "POST",
+	          url: "/userlogin/",  
+	          data: {
+	              	csrfmiddlewaretoken: '{{ csrf_token }}',
+	              	username: username,
+					password: password
+	          },
+	          success: function(data) {
+	          	history.go(0);
+	          },
+	          error: function(xhr, textStatus, errorThrown) {
+	          }
+	        });
+		}
+	});
+</script>

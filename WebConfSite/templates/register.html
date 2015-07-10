@@ -1,0 +1,90 @@
+<style type="text/css">
+	div.container{
+	height: 510px;
+	margin:20px auto;
+	font-family: 'Droid Serif', serif;
+	position:relative;
+	}
+	div.main{
+	width: 320px;
+	float:left;
+	padding: 10px 55px 40px;
+	border: 15px solid white;
+	box-shadow: 0 0 10px;
+	border-radius: 2px;
+	font-size: 13px;
+	}
+	input[type=text],[type=password] {
+	width: 97.7%;
+	height: 34px;
+	padding-left: 5px;
+	margin-bottom: 20px;
+	margin-top: 8px;
+	color: #4f4f4f;
+	font-size: 16px;
+	}
+	label{
+	color: #464646;
+	text-shadow: 0 1px 0 #fff;
+	font-size: 14px;
+	font-weight: bold;
+	}
+</style>
+
+<div class="container">
+	<div class="main">
+		<form class="form" method="post" action="#">
+			<h2>Registration</h2>
+			<label>Desired Username :</label>
+			<input type="text" name="dname" id="username">
+			<label>First Name :</label>
+			<input type="text" name="dname" id="firstname">
+			<label>Last Name :</label>
+			<input type="text" name="dname" id="lastname">
+			<label>Email :</label>
+			<input type="text" name="demail" id="email">
+			<label>Password :</label>
+			<input type="password" name="password" id="password">
+			<label>Confirm Password :</label>
+			<input type="password" name="cpassword" id="cpassword">
+			<input type="button" class="button" id="registerbtn" value="Register" style="width: 100%">
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$("#registerbtn").click(function() {
+		var username = $("#username").val();
+		var firstname = $("#firstname").val();
+		var lastname = $("#lastname").val();
+		var email = $("#email").val();
+		var password = $("#password").val();
+		var cpassword = $("#cpassword").val();
+		if (username == '' || firstname =='' || lastname =='' || email == '' || password == '' || cpassword == '') {
+			alert("No field is to be left blank.");
+		} else if ((password.length) < 7) {
+			alert("Minimum password length of 7 characters");
+		} else if (!(password).match(cpassword)) {
+			alert("Your passwords don't match. Try again?");
+		} 
+		else {
+			$.ajax({
+	          type: "POST",
+	          url: "/register/",  
+	          data: {
+	              	csrfmiddlewaretoken: '{{ csrf_token }}',
+	              	username: username,
+	              	firstname: firstname,
+	              	lastname: lastname,
+					email: email,
+					password: password,
+	          },
+	          success: function(data) {
+	          	alert(data);
+	          },
+	          error: function(xhr, textStatus, errorThrown) {
+	          }
+	        });
+		}
+	});
+</script>

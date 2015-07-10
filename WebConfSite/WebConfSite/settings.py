@@ -37,11 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-	'django_socketio',
     'social.apps.django_app.default',
 	'home',
-    'friendship',
-    'corsheaders',
+    'corsheaders', # for CSRF tokens (protection and allows CORs)
 )
 SITE_ID = 1
 MIDDLEWARE_CLASSES = (
@@ -58,10 +56,10 @@ MIDDLEWARE_CLASSES = (
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-#
+
 AUTHENTICATION_BACKENDS = (
     'social.backends.google.GoogleOAuth2',
-    'django.contrib.auth.backends.ModelBackend',        # ...but this one means we can still have local admin accounts as a fallback
+    'django.contrib.auth.backends.ModelBackend', # ...this means we can still have local accounts as a fallback
 )
  
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/login'

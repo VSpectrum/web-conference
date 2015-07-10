@@ -1,0 +1,197 @@
+<div>
+	<style type="text/css">
+.CSSTableGenerator {
+	margin:0px;padding:0px;
+	width:100%;
+	border:1px solid #000000;
+	
+	-moz-border-radius-bottomleft:5px;
+	-webkit-border-bottom-left-radius:5px;
+	border-bottom-left-radius:5px;
+	
+	-moz-border-radius-bottomright:5px;
+	-webkit-border-bottom-right-radius:5px;
+	border-bottom-right-radius:5px;
+	
+	-moz-border-radius-topright:5px;
+	-webkit-border-top-right-radius:5px;
+	border-top-right-radius:5px;
+	
+	-moz-border-radius-topleft:5px;
+	-webkit-border-top-left-radius:5px;
+	border-top-left-radius:5px;
+}.CSSTableGenerator table{
+    border-collapse: collapse;
+        border-spacing: 0;
+	width:100%;
+	height:100%;
+	margin:0px;padding:0px;
+}.CSSTableGenerator tr:last-child td:last-child {
+	-moz-border-radius-bottomright:5px;
+	-webkit-border-bottom-right-radius:5px;
+	border-bottom-right-radius:5px;
+}
+.CSSTableGenerator table tr:first-child td:first-child {
+	-moz-border-radius-topleft:5px;
+	-webkit-border-top-left-radius:5px;
+	border-top-left-radius:5px;
+}
+.CSSTableGenerator table tr:first-child td:last-child {
+	-moz-border-radius-topright:5px;
+	-webkit-border-top-right-radius:5px;
+	border-top-right-radius:5px;
+}.CSSTableGenerator tr:last-child td:first-child{
+	-moz-border-radius-bottomleft:5px;
+	-webkit-border-bottom-left-radius:5px;
+	border-bottom-left-radius:5px;
+}.CSSTableGenerator tr:hover td{
+	
+}
+.CSSTableGenerator tr:nth-child(odd){ background-color:#e5e5e5; }
+.CSSTableGenerator tr:nth-child(even)    { background-color:#ffffff; }.CSSTableGenerator td{
+	vertical-align:middle;
+	
+	
+	border:1px solid #000000;
+	border-width:0px 1px 1px 0px;
+	text-align:center;
+	padding:7px;
+	font-size:14px;
+	font-family:Arial;
+	font-weight:normal;
+	color:#000000;
+}.CSSTableGenerator tr:last-child td{
+	border-width:0px 1px 0px 0px;
+}.CSSTableGenerator tr td:last-child{
+	border-width:0px 0px 1px 0px;
+}.CSSTableGenerator tr:last-child td:last-child{
+	border-width:0px 0px 0px 0px;
+}
+.CSSTableGenerator tr:first-child td{
+		background:-o-linear-gradient(bottom, #4c4c4c 5%, #000000 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #4c4c4c), color-stop(1, #000000) );
+	background:-moz-linear-gradient( center top, #4c4c4c 5%, #000000 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#4c4c4c", endColorstr="#000000");	background: -o-linear-gradient(top,#4c4c4c,000000);
+
+	background-color:#4c4c4c;
+	border:0px solid #000000;
+	text-align:center;
+	border-width:0px 0px 1px 1px;
+	font-size:18px;
+	font-family:Courier;
+	font-weight:bold;
+	color:#ffffff;
+}
+.CSSTableGenerator tr:first-child:hover td{
+	background:-o-linear-gradient(bottom, #4c4c4c 5%, #000000 100%);	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #4c4c4c), color-stop(1, #000000) );
+	background:-moz-linear-gradient( center top, #4c4c4c 5%, #000000 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#4c4c4c", endColorstr="#000000");	background: -o-linear-gradient(top,#4c4c4c,000000);
+
+	background-color:#4c4c4c;
+}
+.CSSTableGenerator tr:first-child td:first-child{
+	border-width:0px 0px 1px 0px;
+}
+.CSSTableGenerator tr:first-child td:last-child{
+	border-width:0px 0px 1px 1px;
+}
+	</style>
+
+	<table class="CSSTableGenerator">
+		<tr>
+			<td>Time Stamp</td>
+			<td>Video DL<br/>(kbps)</td>
+			<td>Audio DL<br/>(kbps)</td>
+			<td>Video UL<br/>(kbps)</td>
+			<td>Audio UL<br/>(kbps)</td>
+			<td>Video PacketLoss<br/>(cumulative)</td>
+			<td>Audio PacketLoss<br/>(cumulative)</td>
+			<td>Video Delay<br/>(ms)</td>
+			<td>Audio Delay<br/>(ms)</td>
+		</tr>
+	    {% for obj in qosdata %}
+	        <tr>
+	        	<td>{{obj.Timestamp|date:'Y-m-d h:i:s A' }}</td>
+	        	<td>{{obj.VideoRecvDR}}</td>
+	        	<td>{{obj.AudioRecvDR}}</td>
+	        	<td>{{obj.VideoSentDR}}</td>
+	        	<td>{{obj.AudioSentDR}}</td>
+	        	<td>{{obj.VidPL}}</td>
+	        	<td>{{obj.AudPL}}</td>
+	        	<td>{{obj.VidDelay}}</td>
+	        	<td>{{obj.AudDelay}}</td>
+	        </tr>
+	    {% endfor %}
+	</table>
+	<br/>
+	<h2>Highlighting column data is simplified by using lists below:</h2><br/>
+
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>TimeStamp</li>
+		{% for obj in qosdata %}
+		<li>{{obj.Timestamp|date:'Y-m-d h:i:s A' }}</li>
+		{% endfor %}
+	</ul>
+
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>Video DL</li>
+		{% for obj in qosdata %}
+		<li>{{obj.VideoRecvDR}}</li>
+		{% endfor %}
+	</ul>
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>Audio DL</li>
+		{% for obj in qosdata %}
+		<li>{{obj.AudioRecvDR}}</li>
+		{% endfor %}
+	</ul>
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>Total DL</li>
+		{% for obj in qosdata %}
+		<li>{{obj.VideoRecvDR|add:obj.AudioRecvDR}}</li>
+		{% endfor %}
+	</ul>
+
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>Video UL</li>
+		{% for obj in qosdata %}
+		<li>{{obj.VideoSentDR}}</li>
+		{% endfor %}
+	</ul>
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>Audio UL</li>
+		{% for obj in qosdata %}
+		<li>{{obj.AudioSentDR}}</li>
+		{% endfor %}
+	</ul>
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>Total UL</li>
+		{% for obj in qosdata %}
+		<li>{{obj.AudioSentDR|add:obj.VideoSentDR}}</li>
+		{% endfor %}
+	</ul>
+
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>Video PacketLoss</li>
+		{% for obj in qosdata %}
+		<li>{{obj.VidPL}}</li>
+		{% endfor %}
+	</ul>
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>Audio PacketLoss</li>
+		{% for obj in qosdata %}
+		<li>{{obj.AudPL}}</li>
+		{% endfor %}
+	</ul>
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>Video Delay</li>
+		{% for obj in qosdata %}
+		<li>{{obj.VidDelay}}</li>
+		{% endfor %}
+	</ul>
+	<ul style="display:inline-table; list-style-type: none;">
+		<li>Audio Delay</li>
+		{% for obj in qosdata %}
+		<li>{{obj.AudDelay}}</li>
+		{% endfor %}
+	</ul>
+</div>

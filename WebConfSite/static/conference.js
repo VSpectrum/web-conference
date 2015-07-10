@@ -203,7 +203,7 @@ var conference = function(config) {
     }, false);
 
     window.addEventListener('keyup', function (e) {
-        if (e.keyCode == 116)
+        if (e.keyCode == 116) //f5 key is pressed (refresh)
             leave();
     }, false);
 

@@ -5,12 +5,16 @@
 <head>
 {% load staticfiles %}
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"> </script>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{% static 'jquerymin211.js' %}"> </script>
+
+<!-- compiled and minified CSS -->
+<link rel="stylesheet" href="{% static 'bootstrapmin320.css' %}">
+<link rel="stylesheet" href="{% static 'bootstraptheme320.css' %}">
+<script type="text/javascript" src="{% static 'bootstrap320.js' %}"> </script>
+
 <link rel="stylesheet" href="{% static 'sidebar.css' %}">
+<link rel="stylesheet" href="{% static 'sesspage.css' %}">
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <script type="text/javascript"> 
@@ -42,7 +46,12 @@
   var videorecordRTC = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]; // record RTC ref
   var audiorecordRTC = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
   var recID = 1;
-  var streamme;
+
+  var remoteStream = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]; //remote stream 0 is local stream
+  var remoteStreamIDList = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+
+  //var myLocalAddress = '';
+
 </script>
 
 
@@ -63,6 +72,11 @@
       width:80%;
       border: 1px solid #ccc;
     }
+
+    .sidebar-nav li {
+      border-bottom: 2px solid #BBBBBB;
+    }
+
 </style>
 
 
@@ -74,15 +88,15 @@
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
-            <ul class="sidebar-nav" id="mainbar">
+            <ul class="sidebar-nav" id="mainbar" style="margin:0 auto; display: table; font-family: 'Droid Serif', serif;">
                 <li class="sidebar-brand">
                     <a href="/{{pageuname|safe}}">{{pagename}}</a>
                 </li>
+                {% if myuname == pageuname %}
                 <li id="inviteuser">
                     <a href="#">Invite Users to Room</a>
                 </li>
 
-                {% if myuname == pageuname %}
                 <li id="setup-new-room">
                     <a href="#">Initiate Conference</a>
                 </li>
@@ -99,8 +113,8 @@
                 <li>
                     <a href="#">-</a>
                 </li>
-                <li id="confMetrics">
-                    <a href="#">View Conference Metrics</a>
+                <li id="confData">
+                    <a href="#">View Conference Data</a>
                 </li>
                 <li>
                     <a href="/{{myuname}}">Leave Room → Home</a>
@@ -144,6 +158,9 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                   <ul class="nav navbar-nav">
                     <li><a href="#" id="menu-toggle">Toggle Menu</a></li>
+                    <li id="liVidUpRate" style="display: none;"><a id="VidUpRate"></a></li>
+                    <li id="liAudUpRate" style="display: none;"><a id="AudUpRate"></a></li>
+                    <li id="liLogStats"><a><input id="LogStats" type='checkbox'>Log Metrics</input></a></li>
                   </ul>
                   <ul class="nav navbar-nav navbar-right">
                     <li><a href="#" id="badaudio">Bad Audio</a></li>
@@ -152,21 +169,33 @@
                 </div><!-- /.navbar-collapse -->
               </div><!-- /.container-fluid -->
             </nav>
+
+            <div id="initsetup" style="display: block">
+              <h2>Initial Setup</h2>
+              <p>Leave Blank for Default. <br/>
+                Click 'Initiate Conference' on the left sidebar to start conference.</p>
+              <input id="vidpermiss" type='checkbox' checked> Stream my Video</input><br/>
+              <input id="audpermiss" type='checkbox' checked> Stream my Audio</input><br/>
+              Video Incoming Limit Datarate: <input id='videoband' type='number' style="width: 80px;" value="1500"></input> kbps <br/>
+              Audio Incoming Limit Datarate: <input id='audioband' type='number' style="width: 80px;" value="50"></input> kbps <br/>
+              <input id="p2pconnect" type='checkbox' checked> Connect Directly to Peers [p2p only]</input><br/><br/>
+                {% if myuname == pageuname %}
+                <button type="button" id="initSessionbtn">
+                    Initiate Conference
+                </button>
+
+                {% else %}
+                <button type="button" id="joinSessionbtn">
+                    Join Conference
+                </button>
+                {% endif %}
+            </div>
            
             <table style="width: 80%;" id="rooms-list"></table>
             <div id="videos-container">
-              <div id="sentvideobitrate"></div>
-              <div id="receivedvideobitrate"></div>
-              <div id="sentaudiobitrate"></div>
-              <div id="receivedaudiobitrate"></div>
             </div>
             
         </div>
-
-        <section id="statistics">
-          <div id="senderStats"></div>
-          <div id="receiverStats"></div>
-        </section>
 
         <section id="recordLinks"></section>
 
@@ -176,7 +205,7 @@
 <br>
 <br>
 </p>
-<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"> </script>
+<script type="text/javascript" src="{% static 'socketiomin0916.js' %}"> </script>
 <script type="text/javascript" src="{% static 'webrtc-stun.js' %}"> </script>
 <script type="text/javascript" src="{% static 'RecordRTC.js' %}"> </script>
 <script type="text/javascript" src="{% static 'conference.js' %}"> </script>
@@ -185,12 +214,22 @@
 
 <script type="text/javascript"> 
 
+    $("#joinSessionbtn").click( function(){
+      document.getElementById("joinSessionbtn").disabled = true;
+      setTimeout(function(){
+        $(".join").click();
+      }, 5000);
+    });
+
+    $("#initSessionbtn").click( function(){
+      $("#setup-new-room").click();
+    });
+//-------------------------------------------------------------------------------------------------------------
     $("#setup-new-room").click( function(){
           $('#setup-new-room').toggle([400]);
           $('#setup-new-room-fill').toggle([400]);
     });
 //-------------------------------------------------------------------------------------------------------------
-
     $("#chatinput").keyup(function (e) {
       if (e.keyCode == 13) {
          $("#chatinputbutton").click();
@@ -206,6 +245,7 @@
             uname:"{{myname}}",
             msg: $('#chatinput').val(),
           };
+
           if(datamsg.msg!="")
           {
             socketchat.emit('roommsg', datamsg );
@@ -215,6 +255,12 @@
     });
 
     socketchat.on("chatmsg", function(data){
+
+        if(data.msg=="rec_all" || data.msg=="rec_all\n")
+        {
+            $(".RecButton").click();
+        }
+
         $("#chatarea").append('<p style="color: #ffffff;">'+'<b>'+data.uname+':</b>'+'<br/>'+data.msg+'<br/></p>');
         $("#chatarea").animate({ scrollTop: $('#chatarea')[0].scrollHeight}, 1000);
     });
@@ -228,23 +274,58 @@
     });
 //-------------------------------------------------------------------------------------------------------------
 
-    $("#videos-container").on('click', '.RecButton' ,function(){  
-        var val = this.value;  
-        videorecordRTC[this.value].stopRecording(function(videoURL) {
-          console.log(videoURL);
-          $('#recordLinks').append('<a href="'+videoURL+'" target="_blank">'+'Video Stream '+val+'</a><br/>');
-          videorecordRTC[this.value].getDataURL(function(dataURL) { });
-        });
-        audiorecordRTC[this.value].stopRecording(function(videoURL) {
-          console.log(videoURL);
-          $('#recordLinks').append('<a href="'+videoURL+'" target="_blank">'+'Audio Stream '+val+'</a><br/>');
-          audiorecordRTC[this.value].getDataURL(function(dataURL) { });
-        });
-    });
+    $("#videos-container").on('click', '.RecButton' ,function(){
+      var val = this.value;  
+      var addr = $(this).parent().children('div#remoteaddr').html();
+      if (addr == undefined) addr="My Stream";
 
+      if(this.innerHTML == "Stop Recording")
+      {
+        document.getElementById("LogStats").checked = false;
+
+        var today = new Date();
+        var now = String(today.getHours()) + ':' + String(today.getMinutes()) + ':' + String(today.getSeconds());
+
+        videorecordRTC[val].stopRecording(function(videoURL) {
+          console.log(videoURL);
+          $('#recordLinks').append('<a href="'+videoURL+'" target="_blank">'+'Recording of <b>Video</b> Stream '+addr+" - "+now+'</a><br/>');
+          videorecordRTC[val].getDataURL(function(dataURL) { });
+        });
+
+        audiorecordRTC[val].stopRecording(function(videoURL) {
+          console.log(videoURL);
+          $('#recordLinks').append('<a href="'+videoURL+'" target="_blank">'+'Recording of <b>Audio</b> Stream '+addr+" - "+now+'</a><br/>');
+          audiorecordRTC[val].getDataURL(function(dataURL) { });
+        });
+
+        $(this).css('background','#3c7fba');
+        this.innerHTML = "Start Recording";
+      }
+
+      else
+      {
+        document.getElementById("LogStats").checked = true;
+
+        var video_options = {
+               type: 'video'
+            };
+        var audio_options = {
+               type: 'audio',
+            };
+
+        videorecordRTC[val] = new RecordRTC(remoteStream[val], video_options);
+        videorecordRTC[val].startRecording();
+        audiorecordRTC[val] = new RecordRTC(remoteStream[val], audio_options);
+        audiorecordRTC[val].startRecording();
+
+        $(this).css('background','#5e0e0e');
+        this.innerHTML = "Stop Recording";
+      }
+    });
 //-------------------------------------------------------------------------------------------------------------
+
     $(".join").click( function(){
-          alert('test');
+          $('#initsetup').hide();
           $(".join").toggle([400]);
           $('#joinConfFill').toggle([400]);
     });
@@ -319,11 +400,11 @@
           },
           error: function(xhr, textStatus, errorThrown) {
           }
-      });
+        });
     });
 
-    $("#confMetrics").click(function(e) {
-        window.open("/QoEsessionAssess?sessionname={{sessname}}");
+    $("#confData").click(function(e) {
+        window.open("/conference-data?sessionname={{sessname}}");
     });
 
     window.onbeforeunload = function(){

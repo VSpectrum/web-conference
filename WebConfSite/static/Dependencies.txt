@@ -1,0 +1,48 @@
+Remote Dependencies:
+
+sesspage.html : line 205
+	var CHAT_SERVER = 'http://veydh.com:8887/';		//-----------------------MY CHAT SERVER
+
+conferencesetup.js : line 4
+	var SIGNALING_SERVER = 'http://veydh.com:8888/',  //-----------------------MY SIGNALING SERVER
+
+webrtc-stun.js : lines 24-62
+    if (!moz && chromeVersion >= 28) {
+        
+        iceServers.push({
+            url: 'turn:turn.anyfirewall.com:443?transport=tcp',
+            credential: 'webrtc',
+            username: 'webrtc'
+        });
+
+    }
+
+    if (!moz && chromeVersion < 28) {
+        iceServers.push({
+            url: 'turn:homeo@turn.bistri.com:80',
+            credential: 'homeo'
+        });
+    }
+
+    if (moz) {
+        console.log("VRTC: Detected Mozilla");
+        iceServers.push({
+            url: 'stun:stun.services.mozilla.com'
+        });
+    }
+
+    if (!moz) {
+        console.log("VRTC: Detected NOT Mozilla");
+        
+        iceServers.push({
+            url: 'stun:stun.l.google.com:19302'
+        });
+
+        iceServers.push({
+            url: 'stun:veydh.com:3478' //------------------------------------------MY STUN SERVER
+        });
+
+        iceServers.push({
+            url: 'stun:stun.anyfirewall.com:3478'
+        });
+    }

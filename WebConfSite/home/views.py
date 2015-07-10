@@ -3,14 +3,17 @@ from django.template import RequestContext
 from django.http import HttpResponse, Http404
 from django.contrib.sessions.models import Session
 
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.models import User
 from home.models import *
 
 from collections import Counter, defaultdict, OrderedDict
 import hashlib, random, json, datetime
+from pprint import pprint #debug
 ######################################################################################################
 
 ### Home Page ### / ------------------------------------------------------------------------------------------------------
@@ -19,6 +22,13 @@ def index(request):
 		return render_to_response('home/index.html', context_instance = RequestContext(request))
 	else:
 		return redirect('/'+str(request.user))
+
+### Fetch Page ### / -----------------------------------------------------------------------------------------------------
+def getpage(request):
+	if request.method == 'GET':
+		page = str(request.GET.get('page', None))
+		return render_to_response(page+'.html', context_instance = RequestContext(request))
+
 
 ### Logout and Redirect to Home Page ### /logout -------------------------------------------------------------------------
 def logout(request):
@@ -219,13 +229,40 @@ def storesessdata(request):
 	if request.method == "POST":
 		User = str(request.user)
 		sessionname = str(request.POST.get('sessionname', ''))
-		PVideoSentDR = float(request.POST.get('VideoSentDR', 0))
-		PVideoRecvDR = float(request.POST.get('VideoRecvDR', 0))
-		PAudioSentDR = float(request.POST.get('AudioSentDR', 0))
-		PAudioRecvDR = float(request.POST.get('AudioRecvDR', 0))
+		ToID = str(request.POST.get('ToID', ''))
+		PVideoSentDR = (request.POST.get('VideoSentDR', 0))
+		PVideoRecvDR = (request.POST.get('VideoRecvDR', 0))
+		PAudioSentDR = (request.POST.get('AudioSentDR', 0))
+		PAudioRecvDR = (request.POST.get('AudioRecvDR', 0))
+		PVidDelay = (request.POST.get('VidDelay', 0))
+		PAudDelay = (request.POST.get('AudDelay', 0))
+		PVidPL = (request.POST.get('VidPL', 0))
+		PAudPL = (request.POST.get('AudPL', 0))
+
+		pprint(PAudioSentDR)
+
+		if str(PVideoSentDR) is '':
+			PVideoSentDR = 0
+		else:
+			PVideoSentDR = float(PVideoSentDR)
+
+		if str(PVideoRecvDR) is '':
+			PVideoRecvDR = 0
+		else:
+			PVideoRecvDR = float(PVideoRecvDR)
+
+		if str(PAudioSentDR) is '':
+			PAudioSentDR = 0
+		else:
+			PAudioSentDR = float(PAudioSentDR)
+
+		if str(PAudioRecvDR) is '':
+			PAudioRecvDR = 0
+		else:
+			PAudioRecvDR = float(PAudioRecvDR)
 
 		SessObj = NewSession.objects.get(sessionName=sessionname)
-		QoEassessment.objects.create(sessionName=SessObj, sessionUser=User, VideoSentDR=PVideoSentDR, VideoRecvDR=PVideoRecvDR, AudioSentDR=PAudioSentDR, AudioRecvDR=PAudioRecvDR, Timestamp=datetime.datetime.now())
+		QoEassessment.objects.create(sessionName=SessObj, sessionUser=User, tostreamID=ToID[6:], VideoSentDR=PVideoSentDR, VideoRecvDR=PVideoRecvDR, AudioSentDR=PAudioSentDR, AudioRecvDR=PAudioRecvDR, VidPL=PVidPL, AudPL=PAudPL, VidDelay=PVidDelay, AudDelay=PAudDelay, Timestamp=datetime.datetime.now())
 		return HttpResponse('')
 
 ### AnonymousUser Page -----------------------------------------------------------------------------------------
@@ -284,7 +321,72 @@ def qoecalculation(request):
 		data = 	{
 					'userOneClick': userOneClickDict, 
 					'userClickDataRate': userClickDataRate,
-
 				}
 
 		return render_to_response('QoEsessAssess.html', data, context_instance = RequestContext(request))
+
+### Registration Handling --------------------------------------------------------------------------
+def register(request):
+	if request.method == "POST":
+		username = str(request.POST.get('username', ''))
+		password = str(request.POST.get('password', ''))
+		firstname = (str(request.POST.get('firstname', ''))).capitalize()
+		lastname = (str(request.POST.get('lastname', ''))).capitalize()
+		email = str(request.POST.get('email', ''))
+
+		if len(password) < 7:
+			return HttpResponse('Password is too short.')
+
+		else:
+			try:
+				obj = User.objects.get(username=username)
+				return HttpResponse('Username Exists already')
+			except User.DoesNotExist:
+				user = User.objects.create_user(username, email, password)
+				user.first_name = firstname
+				user.last_name = lastname
+				user.save()
+				return HttpResponse('User Profile has been created')
+
+### Login Handling --------------------------------------------------------------------------
+def userlogin(request):
+	if request.method == "POST":
+		username = str(request.POST.get('username', ''))
+		password = str(request.POST.get('password', ''))
+		user = authenticate(username=username, password=password)
+
+		if user is not None:
+			auth_login(request, user)
+			return redirect('/'+username)
+		else:
+			return HttpResponse('Incorrect Login Parameters.')
+
+### Login Handling --------------------------------------------------------------------------
+def conferencefilter(request):
+	if request.method == "GET":
+		session = str(request.GET.get('sessionname', ''))
+		qosdata = QoEassessment.objects.filter(sessionName__sessionName=session)
+		uniqueuserlist = [i[0] for i in qosdata.values_list('sessionUser').distinct()]
+		uniqueaddrlist = [i[0] for i in qosdata.values_list('tostreamID').distinct()]
+
+		data = {
+			'uniqueUsers':uniqueuserlist,
+			'uniqueAddrs':uniqueaddrlist,
+			'sessname':session,
+		}
+
+		return render_to_response('sessiondata.html', data, context_instance = RequestContext(request))
+
+	else:
+		session = str(request.POST.get('sessionname', ''))
+		fusername = str(request.POST.get('fusername', ''))
+		address = str(request.POST.get('address', ''))
+		qosdata = QoEassessment.objects.filter(sessionName__sessionName=session, tostreamID=address, sessionUser=fusername)
+
+		pprint(session)
+
+		data = {
+			'qosdata':qosdata,
+		}
+
+		return render_to_response('sessiondatatable.html', data, context_instance = RequestContext(request))

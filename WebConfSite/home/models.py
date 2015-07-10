@@ -47,10 +47,15 @@ class ManagedSession(models.Model):
 class QoEassessment(models.Model):
 	sessionName 	= models.ForeignKey(NewSession)
 	sessionUser		= models.CharField(max_length=50)
+	tostreamID		= models.CharField(max_length=50)
 	VideoSentDR		= models.DecimalField(max_digits=8, decimal_places=3, default=0)
 	VideoRecvDR 	= models.DecimalField(max_digits=8, decimal_places=3, default=0)
 	AudioSentDR 	= models.DecimalField(max_digits=8, decimal_places=3, default=0)
 	AudioRecvDR 	= models.DecimalField(max_digits=8, decimal_places=3, default=0)
+	VidPL			= models.IntegerField(blank=True)
+	AudPL			= models.IntegerField(blank=True)
+	VidDelay		= models.IntegerField(blank=True)
+	AudDelay		= models.IntegerField(blank=True)
 	Timestamp		= models.DateTimeField()
 
 	class Meta:

@@ -4,13 +4,48 @@
 <head>
 {% load staticfiles %}
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="{% static 'jquerymin211.js' %}"></script>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="{% static 'bootstrapmin320.css' %}">
+<link rel="stylesheet" href="{% static 'bootstraptheme320.css' %}">
+<script src="{% static 'bootstrap320.js' %}"></script>
 <link rel="stylesheet" href="{% static 'sidebar.css' %}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style type="text/css">
+    .button {
+        border-top: 1px solid #96d1f8;
+        background: #3c7fba;
+        padding: 6.5px 13px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+        -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+        box-shadow: rgba(0,0,0,1) 0 1px 0;
+        text-shadow: rgba(0,0,0,.4) 0 1px 0;
+        color: #ffffff;
+        font-size: 17px;
+        font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+        text-decoration: none;
+        vertical-align: middle;
+    }
+    .button:hover {
+        border-top-color: #5e0e0e;
+        background: #5e0e0e;
+        color: #ffffff;
+    }
+    .button:active {
+       border-top-color: #1b435e;
+       background: #1b435e;
+    }
+
+    .sidebar-nav li {
+      border-bottom: 2px solid #BBBBBB;
+    }
+</style>
+
+
 <script type="text/javascript"> 
 
    $(window).bind('beforeunload', function() {
@@ -56,16 +91,17 @@
 
     <!-- Sidebar -->
     <div id="sidebar-wrapper">
-        <ul class="sidebar-nav">
+        <ul class="sidebar-nav" style="margin:0 auto; display: table; font-family: 'Droid Serif', serif;">
             <li class="sidebar-brand">
                 <a href="/{{pageuname|safe}}">{{pagename}}</a>
             </li>
+            <!--
             <li>
                 <a href="/{{myuname|safe}}">My Home Page</a>
             </li>
             <li>
                 <a href="#">Friends</a>
-            </li>
+            </li>-->
             <li id="userinvitesess">
                 <a href="#">Create User-Invited-Only Session</a>
             </li>
@@ -81,7 +117,7 @@
 
     {% if myuname == pageuname %}
       <div id="page-content-wrapper">
-              <a class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+              <button class="button" id="menu-toggle">Toggle Menu</button>
       </div>
       
       <div style="padding-left:20px">
@@ -95,6 +131,8 @@
     {% else %}
       <div id="page-content-wrapper">
               <a class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+              <br/>
+              Welcome to {{ pageuname }}'s Page!
       </div>
 
 

@@ -1,0 +1,57 @@
+<html>
+    <head>
+        {% load staticfiles %}
+        <script type="text/javascript" src="{% static 'jquerymin211.js' %}"> </script>
+        <!-- compiled and minified CSS -->
+        <link rel="stylesheet" href="{% static 'bootstrapmin320.css' %}">
+        <link rel="stylesheet" href="{% static 'bootstraptheme320.css' %}">
+        <script type="text/javascript" src="{% static 'bootstrap320.js' %}"> </script>
+        <link rel="stylesheet" href="{% static 'sidebar.css' %}">
+        <link rel="stylesheet" href="{% static 'sesspage.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div id="getData">
+            Logged by Session User: <input type="text" id="FromUser" list="SessionUsers"></input>
+            Stream data received from: <input type="text" id="StreamAddress" list="SessionAddresses"></input>
+            <input type="button" id="FetchFilteredData" value="Fetch Data"></input>
+    
+            <datalist id="SessionUsers">
+                {% if uniqueUsers.count > 0 %}
+                    {% for user in uniqueUsers %}
+                        <option value="{{user}}">
+                    {% endfor %}
+                {% endif %}
+            </datalist>
+
+            <datalist id="SessionAddresses">
+                {% if uniqueAddrs.count > 0 %}
+                    {% for addr in uniqueAddrs %}
+                        <option value="{{addr}}">
+                    {% endfor %}
+                {% endif %}
+            </datalist>
+
+        </div>
+        <div id="content"></div>
+    </body>
+    <script type="text/javascript">
+        $('#FetchFilteredData').click(function(){
+            $.ajax({
+              type: "POST",
+              url: "/conference-data/",  
+              data: {
+                  csrfmiddlewaretoken: '{{ csrf_token }}',
+                  sessionname: '{{sessname}}',
+                  fusername: $('#FromUser').val(),
+                  address: $('#StreamAddress').val(),
+              },
+              success: function(data) {
+                $('#content').html(data);
+              },
+              error: function(xhr, textStatus, errorThrown) {
+              }
+            });
+        });
+    </script>
+</html>

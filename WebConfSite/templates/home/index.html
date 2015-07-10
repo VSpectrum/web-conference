@@ -11,6 +11,39 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="{% static 'sidebar.css' %}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style type="text/css">
+    .button {
+        border-top: 1px solid #96d1f8;
+        background: #3c7fba;
+        padding: 6.5px 13px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+        -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+        box-shadow: rgba(0,0,0,1) 0 1px 0;
+        text-shadow: rgba(0,0,0,.4) 0 1px 0;
+        color: #ffffff;
+        font-size: 17px;
+        font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+        text-decoration: none;
+        vertical-align: middle;
+    }
+    .button:hover {
+        border-top-color: #5e0e0e;
+        background: #5e0e0e;
+        color: #ffffff;
+    }
+    .button:active {
+       border-top-color: #1b435e;
+       background: #1b435e;
+    }
+    .sidebar-nav li {
+      border-bottom: 2px solid #BBBBBB;
+    }
+</style>
+
 </head>
 
 <body> 
@@ -19,21 +52,21 @@
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
+            <ul class="sidebar-nav" style="margin:0 auto; display: table; font-family: 'Droid Serif', serif;">
                 <li class="sidebar-brand">
                     <a href="#">Web Conference</a>
                 </li>
                 <li>
                     <a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a>
                 </li>
-                <li>
-                    <a href="#">-</a>
+                <li id="login" class="loadpage">
+                    <a href="#">Login</a>
                 </li>
-                <li>
-                    <a href="#">-</a>
+                <li id="register" class="loadpage">
+                    <a href="#">Register</a>
                 </li>
-                <li>
-                    <a href="#">-</a>
+                <li id="leaveMessage" class="loadpage">
+                    <a href="#">Leave a Message</a>
                 </li>
                 <li id="About">
                     <a href="#">About</a>
@@ -43,13 +76,24 @@
         </div>
 
         <div id="page-content-wrapper">
-            <a class="btn btn-default" id="menu-toggle">Toggle Menu</a>
-            <div id="Aboutinfo" style="display: none">
-                <h2>
-                    prototype:<br> 
-                    Chrome to Chrome web browser solution for video conferencing.<br>
-                    Best attempt to avoid the need to download plugins!<br>
-                </h2>
+            <button class="button" id="menu-toggle">Toggle Menu</button>
+            
+            <div id="loadedpage" class="loadedcontent"></div>
+
+            <div id="Aboutinfo" style="display: block">
+                <div align="center" style="margin:0 auto;">
+                    <div align="left" style="margin:0 auto; display: table; font-family: 'Droid Serif', serif; font-size: 17px;">
+                        <br/>Prototype <b><u>vRTC</b></u>:<br/><br/>
+                        <b>Chrome to Chrome</b> browser solution for <b>video conferencing</b>,<br/>
+                        local <b>recording</b> of conference and <b>real-time communication</b>.<br/><br/>
+                        This service provides a <b>Quality of Experience</b> testing framework,<br/>
+                        where several network parameters can be <b>programmatically monitored</b>.<br/><br/>
+                        User feedback is also encouraged as this data can be used in <br/>
+                        further research such as <b>how network metrics affect video and audio</b> <br/>
+                        quality and how users feel about these different levels of quality.
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -64,8 +108,26 @@
     });
     
     $("#About").click( function(){
-          //$("#friendsearcher").toggle([400]);
-          $("#Aboutinfo").toggle();
+            $(".loadedcontent").html('');
+          $("#Aboutinfo").css('display', 'block');
+    });
+
+    $(".loadpage").click( function(){
+        $(".loadedcontent").html('');
+        $("#Aboutinfo").css('display', 'none');
+
+        $.ajax({
+            type: "GET",
+            url: "/getpage/",  
+            data: {
+            page: $(this).attr('id'),
+            },
+            success: function(data) {
+                $('#loadedpage').html(data);
+            },
+            error: function(xhr, textStatus, errorThrown) {
+            }
+      });
     });
 
 </script>
